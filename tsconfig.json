@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "watch": false,
+        "sourceMap": false,
+        "declaration": true,
+        "stripInternal": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strictNullChecks": false,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es5",
+        "outFile": "out/hehe.js",
+        "lib": ["es5", "dom", "es2015.promise"]
+    },
+    "include": ["lib", "src"]
+}
