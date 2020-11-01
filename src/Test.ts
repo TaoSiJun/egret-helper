@@ -1,3 +1,3 @@
-namespace h {
-    // app.loadScene();
-}
+(function () {
+    console.log("helper test");
+})();

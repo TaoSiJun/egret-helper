@@ -1,7 +1,7 @@
 namespace h {
     export interface IComponent {
         /**
-         * 释放
+         * 从舞台删除释放
          */
         onDispose: () => void;
     }

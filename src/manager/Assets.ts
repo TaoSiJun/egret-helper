@@ -68,8 +68,5 @@ namespace h {
             }
         }
     }
-    /**
-     * 资源管理
-     */
     export const assets = new AssetsManager();
 }

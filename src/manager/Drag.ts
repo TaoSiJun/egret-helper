@@ -8,6 +8,7 @@ namespace h {
         offset: { x: number; y: number };
         onDragStart: (e: egret.TouchEvent) => void;
         onDragEnd: (e: egret.TouchEvent) => void;
+        onDragMove: (e: egret.TouchEvent) => void;
         onDragTarget: (target: any) => void;
         dragMoveObject: () => egret.DisplayObject;
     }
@@ -48,10 +49,10 @@ namespace h {
                     let offset = options.offset || { x: 0, y: 0 };
                     this.currentDragTarget = dragTarget;
                     this.offsetPoint.setTo((display.width * display.scaleX) / 2 + offset.x, (display.height * display.scaleY) / 2 + offset.y);
-                    if (typeof options.onDragStart === 'function') {
+                    if (typeof options.onDragStart === "function") {
                         options.onDragStart.call(options.thisObj, e);
                     }
-                    if (typeof options.dragMoveObject === 'function') {
+                    if (typeof options.dragMoveObject === "function") {
                         this.currentMove = options.dragMoveObject.call(options.thisObj);
                         if (this.currentMove) {
                             currentTarget.addChild(this.currentMove);
@@ -64,14 +65,14 @@ namespace h {
         }
 
         private onEnd(e: egret.TouchEvent) {
-            let currentTarget = e.currentTarget as egret.DisplayObjectContainer;
+            let currentTarget = e.currentTarget;
             currentTarget.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBegin, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_END, this.onEnd, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onOutside, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMove, this);
             if (this.currentDragTarget) {
                 let options = this.currentDragTarget.options;
-                if (typeof options.onDragEnd === 'function') {
+                if (typeof options.onDragEnd === "function") {
                     options.onDragEnd.call(options.thisObj, e);
                 }
                 for (let i = 0; i < this.dragTargetArray.length; ++i) {
@@ -83,7 +84,7 @@ namespace h {
                     display.localToGlobal(0, 0, this.stagePoint);
                     if (this.checkPosition(e.stageX, e.stageY, this.stagePoint.x, this.stagePoint.y, display)) {
                         let options = this.currentDragTarget.options;
-                        if (typeof options.onDragTarget === 'function') {
+                        if (typeof options.onDragTarget === "function") {
                             options.onDragTarget.call(options.thisObj, dragTarget);
                         }
                         break;
@@ -96,14 +97,14 @@ namespace h {
         }
 
         private onOutside(e: egret.TouchEvent) {
-            let currentTarget = e.currentTarget as egret.DisplayObjectContainer;
+            let currentTarget = e.currentTarget;
             currentTarget.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBegin, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_END, this.onEnd, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onOutside, this);
             currentTarget.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMove, this);
             if (this.currentDragTarget) {
                 let options = this.currentDragTarget.options;
-                if (typeof options.onDragEnd === 'function') {
+                if (typeof options.onDragEnd === "function") {
                     options.onDragEnd.call(options.thisObj, e);
                 }
             }
@@ -116,6 +117,10 @@ namespace h {
             if (this.currentMove) {
                 this.currentMove.x = e.stageX - this.offsetPoint.x;
                 this.currentMove.y = e.stageY - this.offsetPoint.y;
+            }
+            let currentTarget = e.currentTarget;
+            if (currentTarget.onDragMove) {
+                currentTarget.onDragMove(e);
             }
         }
 

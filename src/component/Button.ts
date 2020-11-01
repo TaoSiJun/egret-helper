@@ -23,6 +23,7 @@ namespace h {
          * TOUCH_BEGIN事件触发
          */
         public onBegin: (e: egret.TouchEvent) => void;
+
         /**
          * 按钮组件
          */
@@ -31,20 +32,24 @@ namespace h {
             this.addEventListener(egret.Event.ADDED_TO_STAGE, this._onAdded, this);
             this.once(egret.Event.ENTER_FRAME, this._setAnchorCenter, this);
         }
+
         private _setAnchorCenter() {
             this.x += this.width / 2;
             this.y += this.height / 2;
             this.anchorOffsetX = this.width / 2;
             this.anchorOffsetY = this.height / 2;
         }
+
         private _onAdded() {
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this._onRemoved, this);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
         }
+
         private _onRemoved() {
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this._onRemoved, this);
             this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
         }
+
         private _onBegin(e: egret.TouchEvent) {
             if (this.enable) {
                 this.addEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
@@ -55,6 +60,7 @@ namespace h {
                 }
             }
         }
+
         private _onEnd(e: egret.TouchEvent) {
             if (this.enable) {
                 this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
@@ -73,6 +79,7 @@ namespace h {
                 }
             }
         }
+
         private _onOutside() {
             if (this.enable) {
                 egret.Tween.get(this)
@@ -83,6 +90,7 @@ namespace h {
                     });
             }
         }
+
         public onDispose() {
             egret.Tween.removeTweens(this);
             this.removeEventListener(egret.Event.ADDED_TO_STAGE, this._onAdded, this);

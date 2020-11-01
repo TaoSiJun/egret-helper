@@ -1,11 +1,11 @@
 {
-    "name": "hehe-egret",
-    "version": "1.0.0",
+    "name": "egret-helper",
+    "version": "1.0.1",
     "description": "some egret engine helper",
     "scripts": {
         "test": "tsc & uglifyjs ./out/hehe.js -o ./out/hehe.min.js -m & echo done"
     },
-    "author": "hehe123",
+    "author": "taosijun",
     "license": "ISC",
     "dependencies": {},
     "devDependencies": {
