@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "description": "some egret engine helper",
     "scripts": {
-        "test": "tsc & uglifyjs ./out/hehe.js -o ./out/hehe.min.js -m & echo done"
+        "test": "tsc & uglifyjs ./out/egret-helper.js -o ./out/egret-helper.min.js -m & echo done"
     },
     "author": "taosijun",
     "license": "ISC",
