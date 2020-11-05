@@ -1,3 +1,5 @@
-(function () {
-    console.log("helper test");
-})();
+namespace h {
+    const test = () => {};
+
+    test();
+}
