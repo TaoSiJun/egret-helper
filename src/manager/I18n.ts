@@ -16,16 +16,19 @@ namespace h.i18n {
      */
     export function localize(key: string, ...args: any[]) {
         try {
+            if (!i18nMetadata) {
+                throw "i18n metadata is undefined";
+            }
             let s = i18nMetadata[key];
             if (!s) {
-                throw key;
+                throw `i18n '${key}' not found`;
             }
             for (let i = 0; i < args.length; ++i) {
                 s = s.replace("{" + i + "}", args[i]);
             }
             return s;
         } catch (error) {
-            console.warn(`i18n ${key} not found`);
+            console.warn(error);
         }
     }
 }
