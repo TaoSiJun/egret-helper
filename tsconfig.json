@@ -14,7 +14,7 @@
         "allowSyntheticDefaultImports": true,
         "target": "es5",
         "outFile": "out/egret-helper.js",
-        "lib": ["es5", "dom", "es2015.promise"]
+        "lib": ["es5", "dom", "es2015", "es2015.promise"]
     },
     "include": ["lib", "src"]
 }
