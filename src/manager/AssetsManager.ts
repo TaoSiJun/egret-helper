@@ -5,9 +5,9 @@ namespace h {
 
         private createDbFactory(srcName: string, dbName?: string, dbScale?: number) {
             let factory = new dragonBones.EgretFactory();
-            let ske = RES.getRes(srcName + '_ske_json') || RES.getRes(srcName + '_ske_dbbin');
-            let json = RES.getRes(srcName + '_tex_json');
-            let png = RES.getRes(srcName + '_tex_png');
+            let ske = RES.getRes(srcName + "_ske_json") || RES.getRes(srcName + "_ske_dbbin");
+            let json = RES.getRes(srcName + "_tex_json");
+            let png = RES.getRes(srcName + "_tex_png");
             factory.parseDragonBonesData(ske, dbName, dbScale);
             factory.parseTextureAtlasData(json, png, dbName, dbScale);
             return factory;
@@ -31,16 +31,16 @@ namespace h {
          * @param name
          */
         public createParticle(name: string): particle.GravityParticleSystem {
-            let data = RES.getRes(name + '_json');
-            let texture = RES.getRes(name + '_png');
+            let data = RES.getRes(name + "_json");
+            let texture = RES.getRes(name + "_png");
             let system = new particle.GravityParticleSystem(texture, data);
             return system;
         }
 
         private createFactory(name: string): egret.MovieClipDataFactory {
             if (this.movieClipFactory[name] === undefined) {
-                let texture = RES.getRes(name + '_png');
-                let data = RES.getRes(name + '_json');
+                let texture = RES.getRes(name + "_png");
+                let data = RES.getRes(name + "_json");
                 let factory = new egret.MovieClipDataFactory(data, texture);
                 this.movieClipFactory[name] = factory;
             }

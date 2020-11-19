@@ -5,7 +5,7 @@ namespace h.i18n {
      * 设置语言包数据
      * @param data
      */
-    export function setI18nMetadata(data: any) {
+    export function setData(data: any) {
         i18nMetadata = data;
     }
 
