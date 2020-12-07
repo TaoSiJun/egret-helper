@@ -5,7 +5,7 @@ namespace h {
         once: boolean;
     }
 
-    export class EventEmitter<EventName extends string = string> {
+    export class EventEmitter<EventName = any> {
         private eventsMap: Map<EventName, Handler[]> = new Map();
 
         /**
@@ -57,7 +57,7 @@ namespace h {
         }
 
         /**
-         * Invoke all handlers for the given event name
+         * Emit all handlers for the given event name
          * @param name
          * @param args
          */
@@ -68,6 +68,13 @@ namespace h {
                     this.off(name, value.context, value.listener);
                 }
             });
+        }
+
+        /**
+         * Clear all handlers
+         */
+        public clear() {
+            this.eventsMap.clear();
         }
     }
 }
