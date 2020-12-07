@@ -16,6 +16,11 @@ namespace h {
          */
         public sound: string = "click";
         /**
+         * 缩放效果
+         * @default true
+         */
+        public scale: boolean = true;
+        /**
          * TOUCH_END事件触发
          */
         public onClick: (e: egret.TouchEvent) => void;
@@ -54,7 +59,9 @@ namespace h {
             if (this.enable) {
                 this.addEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
                 this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this._onOutside, this);
-                egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100);
+                if (this.scale) {
+                    egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100);
+                }
                 if (this.onBegin) {
                     this.onBegin(e);
                 }
@@ -65,12 +72,14 @@ namespace h {
             if (this.enable) {
                 this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
                 this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this._onOutside, this);
-                egret.Tween.get(this)
-                    .to({ scaleX: 1, scaleY: 1 }, 100)
-                    .call(() => {
-                        this.scaleX = 1;
-                        this.scaleY = 1;
-                    });
+                if (this.scale) {
+                    egret.Tween.get(this)
+                        .to({ scaleX: 1, scaleY: 1 }, 100)
+                        .call(() => {
+                            this.scaleX = 1;
+                            this.scaleY = 1;
+                        });
+                }
                 if (this.onClick) {
                     this.onClick(e);
                 }
