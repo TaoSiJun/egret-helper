@@ -6,14 +6,20 @@ namespace h {
         onDispose: () => void;
     }
 
-    export abstract class Scene extends eui.Component implements IComponent {
+    export abstract class Component extends eui.Component implements IComponent {
         /**
-         * 场景类是否允许释放 重写此属性设置 默认true
+         * 场景类是否允许释放
+         * @override 重写设置
+         * @default true
          */
         public allowDispose = true;
         /**
-         * 通过继承Scene设置场景
-         * 回调函数顺序:onAdded->onComplete->createChildren
+         * 场景基类
+         * @method onAdded
+         * @method onComplete
+         * @method createChildren
+         * @method onRemoved
+         * @extends eui.Component
          */
         public constructor() {
             super();

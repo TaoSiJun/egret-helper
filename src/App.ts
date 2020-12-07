@@ -1,7 +1,7 @@
 namespace h {
     class App {
-        private _scene: Scene;
-        private _sceneList: Scene[] = [];
+        private _component: Component;
+        private _componentList: Component[] = [];
         private _main: egret.DisplayObjectContainer;
 
         /**
@@ -47,26 +47,26 @@ namespace h {
          * 获取当前场景
          */
         public get currentScene() {
-            return this._scene;
+            return this._component;
         }
 
-        private disposeScene(value: Scene) {
+        private disposeComponent(value: Component) {
             this.removeFromStage(value);
             value.onDispose();
             value.$dispose();
         }
 
         /**
-         * 加载一个场景
+         * 加载一个组件
          * 移除当前场景后添加
          * 场景宽高将设置为当前舞台宽高
-         * @param scene 场景实例
+         * @param comp 组件实例
          * @param onBefore 加载前调用
          * @param onAfter 加载后调用
          */
-        public loadScene(scene: Scene, onBefore?: Function, onAfter?: Function) {
-            if (!scene) {
-                throw new Error("Scene Type Error");
+        public loadComponent(comp: Component, onBefore?: Function, onAfter?: Function) {
+            if (!comp) {
+                throw new Error("Component Type Error");
             }
             if (!this.main) {
                 throw new Error("Main is undefined");
@@ -74,17 +74,17 @@ namespace h {
             if (onBefore) {
                 onBefore();
             }
-            let old = this._scene;
+            let old = this._component;
             if (old && old.allowDispose) {
-                this.disposeScene(old);
-                this._scene = null;
+                this.disposeComponent(old);
+                this._component = null;
             }
-            this._scene = scene;
-            this._scene.width = this._main.width;
-            this._scene.height = this._main.height;
-            this.main.addChild(scene);
-            if (!scene.allowDispose) {
-                this._sceneList.unshift(scene);
+            this._component = comp;
+            this._component.width = this._main.width;
+            this._component.height = this._main.height;
+            this.main.addChild(comp);
+            if (!comp.allowDispose) {
+                this._componentList.unshift(comp);
             }
             if (onAfter) {
                 onAfter();
@@ -92,15 +92,15 @@ namespace h {
         }
 
         /**
-         * 移除一个场景
+         * 移除一个组件
          * 不允许释放的场景将会被释放掉
-         * @param scene 场景实例
+         * @param comp 组件实例
          * @param onBefore 移除前调用
          * @param onAfter 移除后调用
          */
-        public removeScene(scene: Scene, onBefore?: Function, onAfter?: Function) {
-            if (!scene) {
-                throw new Error("Scene Type Error");
+        public removeComponent(comp: Component, onBefore?: Function, onAfter?: Function) {
+            if (!comp) {
+                throw new Error("Component Type Error");
             }
             if (!this.main) {
                 throw new Error("Main is undefined");
@@ -108,19 +108,19 @@ namespace h {
             if (onBefore) {
                 onBefore();
             }
-            this.disposeScene(scene);
-            if (!scene.allowDispose) {
-                for (let i = 0; i < this._sceneList.length; ++i) {
-                    if (this._sceneList[i] === scene) {
-                        this._sceneList.splice(i, 1);
+            this.disposeComponent(comp);
+            if (!comp.allowDispose) {
+                for (let i = 0; i < this._componentList.length; ++i) {
+                    if (this._componentList[i] === comp) {
+                        this._componentList.splice(i, 1);
                         break;
                     }
                 }
             }
-            if (scene === this._scene) {
-                let len = this._sceneList.length;
+            if (comp === this._component) {
+                let len = this._componentList.length;
                 let i = len ? len - 1 : 0;
-                this._scene = this._sceneList[i];
+                this._component = this._componentList[i];
             }
             if (onAfter) {
                 onAfter();
@@ -132,15 +132,15 @@ namespace h {
          * @param onBefore
          * @param onAfter
          */
-        public removeSceneAll(onBefore?: Function, onAfter?: Function) {
+        public removeComponentAll(onBefore?: Function, onAfter?: Function) {
             if (onBefore) {
                 onBefore();
             }
-            while (this._sceneList.length > 0) {
-                let scene = this._sceneList.pop();
-                this.disposeScene(scene);
+            while (this._componentList.length > 0) {
+                let scene = this._componentList.pop();
+                this.disposeComponent(scene);
             }
-            this._scene = null;
+            this._component = null;
             if (onAfter) {
                 onAfter();
             }
