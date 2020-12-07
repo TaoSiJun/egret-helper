@@ -15,9 +15,13 @@ namespace h {
             return this._quite;
         }
         private async getSound(name: string): Promise<egret.Sound> {
-            return await RES.getResAsync(name + "_mp3");
+            try {
+                return await RES.getResAsync(name + "_mp3");
+            } catch (error) {
+                console.warn("Sound not found:", name);
+            }
         }
-        public playSound(name: string, loops: number = 1, vol: number = 1) {
+        public playSound(name: string, vol: number = 1, loops: number = 1) {
             if (this.quite) {
                 return;
             }
