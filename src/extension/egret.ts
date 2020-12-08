@@ -4,13 +4,20 @@ declare namespace egret {
          * Remove a egret.DisplayObject from stage
          * @returns remove successfully
          */
-        removeFromStage: () => boolean;
+        removeFromStage(): boolean;
+        /**
+         * Called when egret.DisplayObject removed from stage
+         */
+        onRemovedFromStage(): void;
     }
 }
 
 egret.DisplayObject.prototype.removeFromStage = function () {
     if (this.parent) {
         this.parent.removeChild(this);
+        if (this.onRemovedFromStage) {
+            this.onRemovedFromStage();
+        }
         return true;
     }
     return false;

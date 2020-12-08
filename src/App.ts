@@ -5,16 +5,6 @@ namespace h {
         private _main: egret.DisplayObjectContainer;
 
         /**
-         * 从舞台中删除一个显示对象
-         * @param display 要删除的显示对象
-         */
-        public removeFromStage(display: egret.DisplayObject) {
-            if (display && display.parent) {
-                display.parent.removeChild(display);
-            }
-        }
-
-        /**
          * 下一帧调用
          * @param callback
          * @param thisObj
@@ -32,8 +22,7 @@ namespace h {
         }
 
         /**
-         * 游戏入口容器
-         * 需要在初始化时赋值
+         * 游戏入口容器 需要在初始化时赋值
          */
         public initMain(value: egret.DisplayObjectContainer) {
             this._main = value;
@@ -43,23 +32,18 @@ namespace h {
             return this._main;
         }
 
-        /**
-         * 获取当前场景
-         */
-        public get currentScene() {
+        public get currentComponent() {
             return this._component;
         }
 
         private disposeComponent(value: Component) {
-            this.removeFromStage(value);
+            value.removeFromStage();
             value.onDispose();
             value.$dispose();
         }
 
         /**
-         * 加载一个组件
-         * 移除当前场景后添加
-         * 场景宽高将设置为当前舞台宽高
+         * 加载一个皮肤组件
          * @param comp 组件实例
          * @param onBefore 加载前调用
          * @param onAfter 加载后调用
@@ -92,8 +76,7 @@ namespace h {
         }
 
         /**
-         * 移除一个组件
-         * 不允许释放的场景将会被释放掉
+         * 移除一个皮肤组件
          * @param comp 组件实例
          * @param onBefore 移除前调用
          * @param onAfter 移除后调用
@@ -118,9 +101,10 @@ namespace h {
                 }
             }
             if (comp === this._component) {
-                let len = this._componentList.length;
-                let i = len ? len - 1 : 0;
-                this._component = this._componentList[i];
+                this._component = null;
+                if (this._componentList.length > 0) {
+                    this._component = this._componentList[0];
+                }
             }
             if (onAfter) {
                 onAfter();
@@ -128,22 +112,15 @@ namespace h {
         }
 
         /**
-         * 移除所有的场景
+         * 删除当前所有组件
          * @param onBefore
          * @param onAfter
          */
-        public removeComponentAll(onBefore?: Function, onAfter?: Function) {
-            if (onBefore) {
-                onBefore();
-            }
+        public removeComponentAll() {
             while (this._componentList.length > 0) {
-                let scene = this._componentList.pop();
-                this.disposeComponent(scene);
+                this.disposeComponent(this._componentList.pop());
             }
             this._component = null;
-            if (onAfter) {
-                onAfter();
-            }
         }
     }
     /**

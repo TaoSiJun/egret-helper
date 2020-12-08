@@ -34,25 +34,16 @@ namespace h {
          */
         public constructor() {
             super();
-            this.addEventListener(egret.Event.ADDED_TO_STAGE, this._onAdded, this);
-            this.once(egret.Event.ENTER_FRAME, this._setAnchorCenter, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
+            this.addEventListener(egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
         }
 
-        private _setAnchorCenter() {
+        private _onAddedToStage() {
+            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
             this.x += this.width / 2;
             this.y += this.height / 2;
             this.anchorOffsetX = this.width / 2;
             this.anchorOffsetY = this.height / 2;
-        }
-
-        private _onAdded() {
-            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this._onRemoved, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
-        }
-
-        private _onRemoved() {
-            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this._onRemoved, this);
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
         }
 
         private _onBegin(e: egret.TouchEvent) {
@@ -102,7 +93,7 @@ namespace h {
 
         public onDispose() {
             egret.Tween.removeTweens(this);
-            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this._onAdded, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
             this.onClick = null;
             this.onBegin = null;
         }

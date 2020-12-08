@@ -91,7 +91,7 @@ namespace h {
                     }
                 }
             }
-            this.remove(this.currentMove);
+            this.currentMove.removeFromStage();
             this.currentMove = null;
             this.currentDragTarget = null;
         }
@@ -108,7 +108,7 @@ namespace h {
                     options.onDragEnd.call(options.thisObj, e);
                 }
             }
-            this.remove(this.currentMove);
+            this.currentMove.removeFromStage();
             this.currentMove = null;
             this.currentDragTarget = null;
         }
@@ -162,6 +162,10 @@ namespace h {
             }
         }
 
+        public clearTarget() {
+            this.dragTargetArray = [];
+        }
+
         /**
          * 添加一个拖拽容器
          * @param area
@@ -192,10 +196,11 @@ namespace h {
             }
         }
 
-        private remove(display: egret.DisplayObject) {
-            if (display && display.parent) {
-                display.parent.removeChild(display);
+        public clearArea() {
+            for (let dragAre of this.dragAreaArray) {
+                dragAre.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBegin, this);
             }
+            this.dragAreaArray = [];
         }
     }
     /**
