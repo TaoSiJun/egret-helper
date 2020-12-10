@@ -5,7 +5,7 @@ namespace h {
      * @param color 16进制颜色
      * @param alpha 透明度 默认1
      */
-    export const addColorFilter = (display: egret.DisplayObject, color: number, alpha: number = 1) => {
+    export function addColorFilter(display: egret.DisplayObject, color: number, alpha: number = 1) {
         let spliceColor = (color: number) => {
             return { r: Math.floor(color / 256 / 256), g: Math.floor(color / 256) % 256, b: color % 256 };
         };
@@ -21,5 +21,5 @@ namespace h {
         } else {
             display.filters = [colorMatrix];
         }
-    };
+    }
 }

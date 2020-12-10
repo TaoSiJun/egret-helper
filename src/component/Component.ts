@@ -3,7 +3,7 @@ namespace h {
         /**
          * 从舞台删除释放
          */
-        onDispose: () => void;
+        onDispose(): void;
     }
 
     export abstract class Component extends eui.Component implements IComponent {
@@ -14,11 +14,15 @@ namespace h {
          */
         public allowDispose = true;
         /**
+         * 数据 组件初始化完成后赋值
+         */
+        public data: any;
+        /**
+         * Lifecycle
+         * @extends eui.Component
          * @method onAdded
          * @method onComplete
          * @method createChildren
-         * @method onRemoved
-         * @extends eui.Component
          */
         public constructor() {
             super();
@@ -48,6 +52,7 @@ namespace h {
             this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAdded, this);
             this.removeEventListener(egret.Event.RESIZE, this.onResize, this);
             this.removeEventListener(egret.Event.COMPLETE, this.onComplete, this);
+            this.data = null;
             //释放按钮组件
             for (let i of this.$children) {
                 if (i instanceof Button) {

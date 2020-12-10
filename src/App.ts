@@ -45,18 +45,14 @@ namespace h {
         /**
          * 加载一个皮肤组件
          * @param comp 组件实例
-         * @param onBefore 加载前调用
-         * @param onAfter 加载后调用
+         * @param onComplete 完成回调
          */
-        public loadComponent(comp: Component, onBefore?: Function, onAfter?: Function) {
+        public loadComponent(comp: Component, onComplete?: (comp: Component) => void) {
             if (!comp) {
                 throw new Error("Component Type Error");
             }
             if (!this.main) {
                 throw new Error("Main is undefined");
-            }
-            if (onBefore) {
-                onBefore();
             }
             let old = this._component;
             if (old && old.allowDispose) {
@@ -70,26 +66,22 @@ namespace h {
             if (!comp.allowDispose) {
                 this._componentList.unshift(comp);
             }
-            if (onAfter) {
-                onAfter();
+            if (onComplete) {
+                onComplete(comp);
             }
         }
 
         /**
          * 移除一个皮肤组件
          * @param comp 组件实例
-         * @param onBefore 移除前调用
-         * @param onAfter 移除后调用
+         * @param onComplete 完成回调
          */
-        public removeComponent(comp: Component, onBefore?: Function, onAfter?: Function) {
+        public removeComponent(comp: Component, onComplete?: (comp: Component) => void) {
             if (!comp) {
                 throw new Error("Component Type Error");
             }
             if (!this.main) {
                 throw new Error("Main is undefined");
-            }
-            if (onBefore) {
-                onBefore();
             }
             this.disposeComponent(comp);
             if (!comp.allowDispose) {
@@ -106,15 +98,13 @@ namespace h {
                     this._component = this._componentList[0];
                 }
             }
-            if (onAfter) {
-                onAfter();
+            if (onComplete) {
+                onComplete(comp);
             }
         }
 
         /**
          * 删除当前所有组件
-         * @param onBefore
-         * @param onAfter
          */
         public removeComponentAll() {
             while (this._componentList.length > 0) {

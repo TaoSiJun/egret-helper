@@ -20,49 +20,51 @@ namespace h {
          * @default true
          */
         public scale: boolean = true;
-        /**
-         * TOUCH_END事件触发
-         */
-        public onClick: (e: egret.TouchEvent) => void;
-        /**
-         * TOUCH_BEGIN事件触发
-         */
-        public onBegin: (e: egret.TouchEvent) => void;
+        public tap: (e: egret.TouchEvent) => void;
+        public begin: (e: egret.TouchEvent) => void;
+        public end: (e: egret.TouchEvent) => void;
 
-        /**
-         * 按钮组件
-         */
-        public constructor() {
-            super();
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
-            this.addEventListener(egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
-        }
-
-        private _onAddedToStage() {
-            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
+        protected createChildren() {
+            super.createChildren();
             this.x += this.width / 2;
             this.y += this.height / 2;
             this.anchorOffsetX = this.width / 2;
             this.anchorOffsetY = this.height / 2;
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTap, this);
         }
 
-        private _onBegin(e: egret.TouchEvent) {
+        private onTouchTap(e: egret.TouchEvent) {
             if (this.enable) {
-                this.addEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this._onOutside, this);
-                if (this.scale) {
-                    egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100);
+                if (this.tap) {
+                    this.tap(e);
                 }
-                if (this.onBegin) {
-                    this.onBegin(e);
+                if (!this.quite) {
+                    sound.playSound(this.sound);
                 }
             }
         }
 
-        private _onEnd(e: egret.TouchEvent) {
+        private onTouchBegin(e: egret.TouchEvent) {
             if (this.enable) {
-                this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onEnd, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this._onOutside, this);
+                this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+                this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onOutside, this);
+                if (this.begin) {
+                    this.begin(e);
+                }
+                if (this.scale) {
+                    egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100);
+                }
+            }
+        }
+
+        private onTouchEnd(e: egret.TouchEvent) {
+            if (this.enable) {
+                this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+                this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onOutside, this);
+                if (this.end) {
+                    this.end(e);
+                }
                 if (this.scale) {
                     egret.Tween.get(this)
                         .to({ scaleX: 1, scaleY: 1 }, 100)
@@ -71,16 +73,10 @@ namespace h {
                             this.scaleY = 1;
                         });
                 }
-                if (this.onClick) {
-                    this.onClick(e);
-                }
-                if (this.sound && !this.quite) {
-                    sound.playSound(this.sound);
-                }
             }
         }
 
-        private _onOutside() {
+        private onOutside() {
             if (this.enable) {
                 egret.Tween.get(this)
                     .to({ scaleX: 1, scaleY: 1 }, 100)
@@ -93,9 +89,8 @@ namespace h {
 
         public onDispose() {
             egret.Tween.removeTweens(this);
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onBegin, this);
-            this.onClick = null;
-            this.onBegin = null;
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTap, this);
         }
     }
 }

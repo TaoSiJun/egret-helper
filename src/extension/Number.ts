@@ -12,8 +12,8 @@ interface Number {
     toAbbreviate(digit?: number, symbols?: string[]): string;
 }
 Number.prototype.toThousands = function () {
-    var num = (this || 0).toString(),
-        result = "";
+    var num = (this || 0).toString();
+    var result = "";
     while (num.length > 3) {
         result = "," + num.slice(-3) + result;
         num = num.slice(0, num.length - 3);
@@ -34,5 +34,6 @@ Number.prototype.toAbbreviate = function (digit, symbols) {
     if (!suffix) throw new RangeError();
     var scale = Math.pow(10, tier * 3);
     var scaled = number / scale;
-    return (!sign ? "-" : "") + scaled.toFixed(digit) + suffix;
+    var result = (!sign ? "-" : "") + scaled.toFixed(digit) + suffix;
+    return result;
 };

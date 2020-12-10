@@ -27,7 +27,7 @@ namespace h {
             this.x = this.stage.stageWidth / 2 - this.width / 2;
             this.y = this.stage.stageHeight / 2 - this.height / 2;
             if (this.closeButton) {
-                this.closeButton.onClick = () => {
+                this.closeButton.tap = () => {
                     this.hide();
                 };
             }
@@ -71,7 +71,7 @@ namespace h {
         protected createChildren() {
             super.createChildren();
             if (this.confirmButton) {
-                this.confirmButton.onClick = () => {
+                this.confirmButton.tap = () => {
                     if (this.data.confirm) {
                         this.data.confirm();
                     }
@@ -79,7 +79,7 @@ namespace h {
                 };
             }
             if (this.cancelButton) {
-                this.cancelButton.onClick = () => {
+                this.cancelButton.tap = () => {
                     if (this.data.cancel) {
                         this.data.cancel();
                     }
