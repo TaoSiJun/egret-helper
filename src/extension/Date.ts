@@ -8,6 +8,10 @@ interface Date {
      * @example new Date().hhmmss(); // 10:20:50
      */
     hhmmss(): string;
+    /**
+     * @example new Date().mmss(); // 20:50
+     */
+    mmss(): string;
 }
 Date.prototype.format = function (format) {
     var o: any = {
@@ -32,4 +36,7 @@ Date.prototype.format = function (format) {
 };
 Date.prototype.hhmmss = function () {
     return this.format("hh:mm:ss");
+};
+Date.prototype.mmss = function () {
+    return this.format("mm:ss");
 };
