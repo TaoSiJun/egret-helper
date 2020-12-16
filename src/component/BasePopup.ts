@@ -130,7 +130,13 @@ namespace h {
             if (this.data && this.data.delay) {
                 delay = this.data.delay;
             }
-            egret.setTimeout(pop.hide, this, delay, this);
+            egret.setTimeout(
+                () => {
+                    pop.hide(this);
+                },
+                this,
+                delay
+            );
         }
     }
 

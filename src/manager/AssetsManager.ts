@@ -28,11 +28,12 @@ namespace h {
 
         /**
          * 创建一个粒子
-         * @param name
+         * @param name JSON file name
+         * @param textureName
          */
-        public createParticle(name: string): particle.GravityParticleSystem {
+        public createParticle(name: string, textureName?: string): particle.GravityParticleSystem {
             let data = RES.getRes(name + "_json");
-            let texture = RES.getRes(name + "_png");
+            let texture = RES.getRes((textureName || name) + "_png");
             let system = new particle.GravityParticleSystem(texture, data);
             return system;
         }

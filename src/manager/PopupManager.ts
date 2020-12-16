@@ -32,15 +32,15 @@ namespace h {
                 pop.data = data;
                 pop.skinName = data.skinName;
             }
-            if (this.contains(this.background)) {
-                this.setChildIndex(this.background, -1);
-            } else if (pop.showBackground) {
+            pop.width = this.stage.stageWidth;
+            pop.height = this.stage.stageHeight;
+            this.addChild(pop);
+            this.popupList.push(pop);
+            if (pop.showBackground) {
                 this.showBackground(pop.opacity);
             } else {
                 this.removeBackground();
             }
-            this.addChild(pop);
-            this.popupList.push(pop);
         }
 
         /**
@@ -49,15 +49,16 @@ namespace h {
          */
         public hide(pop: BasePopup) {
             if (pop) {
-                this.removeChild(pop);
+                pop.removeFromStage();
                 for (let i = this.popupList.length; i >= 0; --i) {
                     if (this.popupList[i] === pop) {
                         this.popupList.splice(i, 1);
                         break;
                     }
                 }
-                if (this.popupList.length > 0) {
-                    this.setChildIndex(this.background, this.popupList.length - 1);
+                let last = this.popupList.last();
+                if (last && last.showBackground) {
+                    this.showBackground(last.opacity);
                 } else {
                     this.removeBackground();
                 }
@@ -111,9 +112,7 @@ namespace h {
         }
 
         private removeBackground() {
-            if (this.background.parent) {
-                this.background.parent.removeChild(this.background);
-            }
+            this.background.removeFromStage();
         }
 
         private showBackground(alpha: number) {
@@ -121,7 +120,11 @@ namespace h {
             this.background.graphics.beginFill(0x000000, alpha);
             this.background.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
             this.background.graphics.endFill();
-            this.addChild(this.background);
+            if (this.contains(this.background)) {
+                this.setChildIndex(this.background, this.popupList.length - 1);
+            } else {
+                this.addChildAt(this.background, 0);
+            }
         }
     }
 
