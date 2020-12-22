@@ -6,7 +6,7 @@ declare namespace egret {
          */
         removeFromStage(): boolean;
         /**
-         * Called when egret.DisplayObject removed from stage
+         * Called when egret.DisplayObject call removeFromStage()
          */
         onRemovedFromStage(): void;
     }

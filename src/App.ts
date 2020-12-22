@@ -45,9 +45,9 @@ namespace h {
         /**
          * 加载一个皮肤组件
          * @param comp 组件实例
-         * @param onComplete 完成回调
+         * @param data
          */
-        public loadComponent(comp: Component, onComplete?: (comp: Component) => void) {
+        public loadComponent(comp: Component, data?: any) {
             if (!comp) {
                 throw new Error("Component Type Error");
             }
@@ -62,21 +62,20 @@ namespace h {
             this._component = comp;
             this._component.width = this._main.width;
             this._component.height = this._main.height;
+            if (data) {
+                comp.data = data;
+            }
             this.main.addChild(comp);
             if (!comp.allowDispose) {
                 this._componentList.unshift(comp);
-            }
-            if (onComplete) {
-                onComplete(comp);
             }
         }
 
         /**
          * 移除一个皮肤组件
          * @param comp 组件实例
-         * @param onComplete 完成回调
          */
-        public removeComponent(comp: Component, onComplete?: (comp: Component) => void) {
+        public removeComponent(comp: Component) {
             if (!comp) {
                 throw new Error("Component Type Error");
             }
@@ -97,9 +96,6 @@ namespace h {
                 if (this._componentList.length > 0) {
                     this._component = this._componentList[0];
                 }
-            }
-            if (onComplete) {
-                onComplete(comp);
             }
         }
 

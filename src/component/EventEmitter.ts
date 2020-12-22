@@ -64,7 +64,7 @@ namespace h {
          * Register an event handler just emit once
          */
         public once(name: Event, listener: Function, context: any) {
-            this.on(name, context, listener, true);
+            this.on(name, listener, context, true);
         }
 
         /**
