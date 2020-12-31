@@ -15,11 +15,6 @@ namespace h {
         mat[6] = result.g / 255;
         mat[12] = result.b / 255;
         mat[18] = alpha;
-        let colorMatrix = new egret.ColorMatrixFilter(mat);
-        if (display.filters) {
-            display.filters.push(colorMatrix);
-        } else {
-            display.filters = [colorMatrix];
-        }
+        display.filters = [new egret.ColorMatrixFilter(mat)];
     }
 }

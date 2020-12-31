@@ -1,8 +1,9 @@
 namespace h {
     class App {
-        private _component: Component;
-        private _componentList: Component[] = [];
+        private _scene: Scene;
+        private _sceneList: Scene[] = [];
         private _main: egret.DisplayObjectContainer;
+        private _stage: egret.Stage;
 
         /**
          * 下一帧调用
@@ -10,8 +11,8 @@ namespace h {
          * @param thisObj
          */
         public callNextFrame(callback: Function, thisObj: any) {
-            if (this._main) {
-                this._main.once(
+            if (this._stage) {
+                this._stage.once(
                     egret.Event.ENTER_FRAME,
                     () => {
                         callback.call(thisObj);
@@ -21,96 +22,87 @@ namespace h {
             }
         }
 
-        /**
-         * 游戏入口容器 需要在初始化时赋值
-         */
-        public initMain(value: egret.DisplayObjectContainer) {
-            this._main = value;
+        public init(stage: egret.Stage, main: egret.DisplayObjectContainer) {
+            this._stage = stage;
+            this._main = main;
+        }
+
+        public get stage() {
+            return this._stage;
         }
 
         public get main() {
             return this._main;
         }
 
-        public get currentComponent() {
-            return this._component;
+        public get currentScene() {
+            return this._scene;
         }
 
-        private disposeComponent(value: Component) {
+        private dispose(value: Scene) {
             value.removeFromStage();
             value.onDispose();
             value.$dispose();
         }
 
         /**
-         * 加载一个皮肤组件
-         * @param comp 组件实例
+         * @param value
          * @param data
          */
-        public loadComponent(comp: Component, data?: any) {
-            if (!comp) {
+        public loadScene(value: Scene, data?: any) {
+            if (!value) {
                 throw new Error("Component Type Error");
             }
-            if (!this.main) {
-                throw new Error("Main is undefined");
-            }
-            let old = this._component;
+            let old = this._scene;
             if (old && old.allowDispose) {
-                this.disposeComponent(old);
-                this._component = null;
+                this.dispose(old);
+                this._scene = null;
             }
-            this._component = comp;
-            this._component.width = this._main.width;
-            this._component.height = this._main.height;
+            this._scene = value;
+            this._scene.width = this.main.width;
+            this._scene.height = this.main.height;
             if (data) {
-                comp.data = data;
+                value.data = data;
             }
-            this.main.addChild(comp);
-            if (!comp.allowDispose) {
-                this._componentList.unshift(comp);
+            this.main.addChild(value);
+            if (!value.allowDispose) {
+                this._sceneList.unshift(value);
             }
         }
 
         /**
-         * 移除一个皮肤组件
-         * @param comp 组件实例
+         * @param value
          */
-        public removeComponent(comp: Component) {
-            if (!comp) {
+        public removeScene(value: Scene) {
+            if (!value) {
                 throw new Error("Component Type Error");
             }
-            if (!this.main) {
-                throw new Error("Main is undefined");
-            }
-            this.disposeComponent(comp);
-            if (!comp.allowDispose) {
-                for (let i = 0; i < this._componentList.length; ++i) {
-                    if (this._componentList[i] === comp) {
-                        this._componentList.splice(i, 1);
+            this.dispose(value);
+            if (!value.allowDispose) {
+                for (let i = 0; i < this._sceneList.length; ++i) {
+                    if (this._sceneList[i] === value) {
+                        this._sceneList.splice(i, 1);
                         break;
                     }
                 }
             }
-            if (comp === this._component) {
-                this._component = null;
-                if (this._componentList.length > 0) {
-                    this._component = this._componentList[0];
+            if (value === this._scene) {
+                this._scene = null;
+                if (this._sceneList.length > 0) {
+                    this._scene = this._sceneList[0];
                 }
             }
         }
 
         /**
-         * 删除当前所有组件
+         * 删除当前所有场景
          */
-        public removeComponentAll() {
-            while (this._componentList.length > 0) {
-                this.disposeComponent(this._componentList.pop());
+        public removeSceneAll() {
+            while (this._sceneList.length > 0) {
+                this.dispose(this._sceneList.pop());
             }
-            this._component = null;
+            this._scene = null;
         }
     }
-    /**
-     * 全局控制
-     */
     export const app = new App();
 }
