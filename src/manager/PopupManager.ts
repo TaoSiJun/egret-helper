@@ -1,45 +1,44 @@
 namespace h {
     /**
      * @private
+     * @extends eui.UILayer
      */
-    class PopupManager extends eui.Group {
+    class PopupManager extends eui.UILayer {
         private popupList: BasePopup[] = [];
-        /**
-         * 遮罩
-         */
         private background: egret.Shape;
 
         public constructor() {
             super();
             this.touchEnabled = false;
+            this.background = new egret.Shape();
+            this.background.touchEnabled = true;
             egret.registerClass(Alert, "h.Alert");
             egret.registerClass(Remind, "h.Remind");
             egret.registerClass(Wait, "h.Wait");
         }
 
-        protected createChildren() {
-            super.createChildren();
-            this.background = new egret.Shape();
-            this.background.touchEnabled = true;
-        }
-
         /**
          * 显示一个弹窗
          * @param pop 继承BasePopup的实例
+         * @param data 弹窗数据
+         * @param skinName 弹窗皮肤
          */
-        public show(pop: BasePopup, data?: { [key: string]: any; skinName?: string }) {
+        public show(pop: BasePopup, data?: { [key: string]: any }, skinName?: string) {
+            if (!this.parent) {
+                app.stage.addChild(this);
+            }
             if (data) {
                 pop.data = data;
-                pop.skinName = data.skinName;
+            }
+            if (skinName) {
+                pop.skinName = skinName;
             }
             pop.width = this.stage.stageWidth;
             pop.height = this.stage.stageHeight;
             this.addChild(pop);
             this.popupList.push(pop);
             if (pop.showBackground) {
-                this.showBackground(pop.opacity);
-            } else {
-                this.removeBackground();
+                pop.addChildAt(this.createBackground(pop.opacity), 0);
             }
         }
 
@@ -56,12 +55,6 @@ namespace h {
                         break;
                     }
                 }
-                let last = this.popupList.last();
-                if (last && last.showBackground) {
-                    this.showBackground(last.opacity);
-                } else {
-                    this.removeBackground();
-                }
             }
         }
 
@@ -74,63 +67,29 @@ namespace h {
         }
 
         /**
-         * 等待提示
-         * @param wait
-         * @param callback
-         * @param data
-         */
-        public async wait(wait: BasePopup, callback: () => Promise<any>, data?: any) {
-            try {
-                this.show(wait, data);
-                let result = await callback();
-                this.hide(wait);
-                return result;
-            } catch (error) {
-                this.hide(wait);
-                throw error;
-            }
-        }
-
-        /**
          * 显示一个提示弹窗
          * @param message
          * @param delay 多久毫秒后删除
          */
-        public remind(message: string, delay: number = 3000) {
-            this.show(new Remind(), { message, delay });
+        public remind(message: string, delay: number = 3000, skinName?: string) {
+            this.show(new Remind(), { message, delay }, skinName);
         }
 
         /**
          * 显示一个警告弹窗
-         * @param title
-         * @param content
-         * @param confirm
-         * @param cancel
+         * @param options
          */
-        public alert(options: { title?: string; content?: string; confirm?: Function; cancel?: Function }) {
-            this.show(new Alert(), options);
+        public alert(options: { title?: string; content?: string; confirm?: Function; cancel?: Function }, skinName?: string) {
+            this.show(new Alert(), options, skinName);
         }
 
-        private removeBackground() {
-            this.background.removeFromStage();
-        }
-
-        private showBackground(alpha: number) {
-            this.background.graphics.clear();
-            this.background.graphics.beginFill(0x000000, alpha);
-            this.background.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
-            this.background.graphics.endFill();
-            if (this.contains(this.background)) {
-                this.setChildIndex(this.background, this.popupList.length - 1);
-            } else {
-                this.addChildAt(this.background, 0);
-            }
+        private createBackground(alpha: number) {
+            let shp = new egret.Shape();
+            shp.graphics.beginFill(0x000000, alpha);
+            shp.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
+            shp.graphics.endFill();
+            return shp;
         }
     }
-
-    /**
-     * 弹窗管理
-     * 调用前需要手动添加到舞台上
-     */
     export const pop = new PopupManager();
 }
