@@ -1,8 +1,5 @@
 namespace h {
-    /**
-     * 弹窗基类
-     */
-    export abstract class BasePopup extends eui.Component implements h.IComponent {
+    export abstract class Popup extends Component implements IComponent {
         /**
          * 关闭按钮
          */
@@ -24,23 +21,22 @@ namespace h {
 
         protected createChildren() {
             super.createChildren();
-            this.x = this.stage.stageWidth / 2 - this.width / 2;
-            this.y = this.stage.stageHeight / 2 - this.height / 2;
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
             if (this.closeButton) {
                 this.closeButton.tap = () => {
-                    this.hide();
+                    pop.hide(this);
                 };
             }
         }
 
-        /**
-         * 关闭弹窗
-         */
-        public hide() {
+        public $onRemovedFromStage() {
+            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
             pop.hide(this);
         }
 
         public onDispose() {
+            super.onDispose();
+            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
             if (this.closeButton) {
                 this.closeButton.onDispose();
             }
@@ -50,7 +46,7 @@ namespace h {
     /**
      * 警告
      */
-    export class Alert extends BasePopup {
+    export class Alert extends Popup {
         /**
          * 确认按钮
          */
@@ -75,7 +71,7 @@ namespace h {
                     if (this.data.confirm) {
                         this.data.confirm();
                     }
-                    this.hide();
+                    this.removeFromStage();
                 };
             }
             if (this.cancelButton) {
@@ -83,7 +79,7 @@ namespace h {
                     if (this.data.cancel) {
                         this.data.cancel();
                     }
-                    this.hide();
+                    this.removeFromStage();
                 };
             }
             if (this.titleLabel) {
@@ -108,7 +104,7 @@ namespace h {
     /**
      * 文本提示
      */
-    export class Remind extends BasePopup {
+    export class Remind extends Popup {
         /**
          * 提示文本Label
          */
@@ -130,20 +126,14 @@ namespace h {
             if (this.data && this.data.delay) {
                 delay = this.data.delay;
             }
-            egret.setTimeout(
-                () => {
-                    pop.hide(this);
-                },
-                this,
-                delay
-            );
+            egret.setTimeout(this.removeFromStage, this, delay);
         }
     }
 
     /**
      * 等待提示
      */
-    export class Wait extends BasePopup {
+    export class Wait extends Popup {
         protected createChildren() {
             super.createChildren();
         }

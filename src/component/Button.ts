@@ -1,6 +1,11 @@
 namespace h {
     export class Button extends eui.Group implements IComponent {
         /**
+         * 点击音效
+         * @default 'click'
+         */
+        public static Sound: string = "click";
+        /**
          * 按钮能否点击
          * @default false
          */
@@ -11,18 +16,18 @@ namespace h {
          */
         public quite: boolean = false;
         /**
-         * 默认点击声音资源名字
-         * @default 'click'
-         */
-        public sound: string = "click";
-        /**
          * 缩放效果
          * @default true
          */
         public scale: boolean = true;
+        /**
+         * 点击音效 不设置将使用默认
+         */
+        public sound: string;
         public tap: (e: egret.TouchEvent) => void;
         public begin: (e: egret.TouchEvent) => void;
         public end: (e: egret.TouchEvent) => void;
+        public out: (e: egret.TouchEvent) => void;
 
         protected createChildren() {
             super.createChildren();
@@ -39,9 +44,6 @@ namespace h {
                 if (this.tap) {
                     this.tap(e);
                 }
-                if (!this.quite) {
-                    sound.playSound(this.sound);
-                }
             }
         }
 
@@ -53,7 +55,10 @@ namespace h {
                     this.begin(e);
                 }
                 if (this.scale) {
-                    egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100);
+                    egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100).set({ scaleX: 0.95, scaleY: 0.95 });
+                }
+                if (!this.quite) {
+                    sound.playSound(this.sound || Button.Sound);
                 }
             }
         }
@@ -66,24 +71,21 @@ namespace h {
                     this.end(e);
                 }
                 if (this.scale) {
-                    egret.Tween.get(this)
-                        .to({ scaleX: 1, scaleY: 1 }, 100)
-                        .call(() => {
-                            this.scaleX = 1;
-                            this.scaleY = 1;
-                        });
+                    egret.Tween.get(this).to({ scaleX: 1, scaleY: 1 }, 100).set({ scaleX: 1, scaleY: 1 });
                 }
             }
         }
 
-        private onOutside() {
+        private onOutside(e: egret.TouchEvent) {
             if (this.enable) {
-                egret.Tween.get(this)
-                    .to({ scaleX: 1, scaleY: 1 }, 100)
-                    .call(() => {
-                        this.scaleX = 1;
-                        this.scaleY = 1;
-                    });
+                this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+                this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onOutside, this);
+                if (this.out) {
+                    this.out(e);
+                }
+                if (this.scale) {
+                    egret.Tween.get(this).to({ scaleX: 1, scaleY: 1 }, 100).set({ scaleX: 1, scaleY: 1 });
+                }
             }
         }
 

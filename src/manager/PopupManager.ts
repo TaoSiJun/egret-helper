@@ -1,17 +1,38 @@
 namespace h {
     /**
      * @private
+     */
+    class PopupSprite extends egret.Sprite {
+        private _pop: Popup;
+
+        constructor(pop: Popup) {
+            super();
+            this._pop = pop;
+            this._pop.width = app.main.width;
+            this._pop.height = app.main.height;
+            if (this._pop.showBackground) {
+                this.touchEnabled = true;
+                this.graphics.beginFill(0x000000, this._pop.opacity);
+                this.graphics.drawRect(0, 0, app.main.width, app.main.height);
+                this.graphics.endFill();
+            }
+            this.addChild(this._pop);
+        }
+
+        public get pop() {
+            return this._pop;
+        }
+    }
+    /**
+     * @private
      * @extends eui.UILayer
      */
     class PopupManager extends eui.UILayer {
-        private popupList: BasePopup[] = [];
-        private background: egret.Shape;
+        private spriteList: PopupSprite[] = [];
 
         public constructor() {
             super();
             this.touchEnabled = false;
-            this.background = new egret.Shape();
-            this.background.touchEnabled = true;
             egret.registerClass(Alert, "h.Alert");
             egret.registerClass(Remind, "h.Remind");
             egret.registerClass(Wait, "h.Wait");
@@ -23,7 +44,7 @@ namespace h {
          * @param data 弹窗数据
          * @param skinName 弹窗皮肤
          */
-        public show(pop: BasePopup, data?: { [key: string]: any }, skinName?: string) {
+        public show(pop: Popup, data?: { [key: string]: any }, skinName?: string) {
             if (!this.parent) {
                 app.stage.addChild(this);
             }
@@ -33,25 +54,22 @@ namespace h {
             if (skinName) {
                 pop.skinName = skinName;
             }
-            pop.width = this.stage.stageWidth;
-            pop.height = this.stage.stageHeight;
-            this.addChild(pop);
-            this.popupList.push(pop);
-            if (pop.showBackground) {
-                pop.addChildAt(this.createBackground(pop.opacity), 0);
-            }
+            let spr = new PopupSprite(pop);
+            this.addChild(spr);
+            this.spriteList.push(spr);
         }
 
         /**
          * 关闭一个弹窗
          * @param pop 继承BasePopup的实例
          */
-        public hide(pop: BasePopup) {
+        public hide(pop: Popup) {
             if (pop) {
-                pop.removeFromStage();
-                for (let i = this.popupList.length; i >= 0; --i) {
-                    if (this.popupList[i] === pop) {
-                        this.popupList.splice(i, 1);
+                for (let i = this.spriteList.length - 1; i >= 0; --i) {
+                    if (this.spriteList[i].pop === pop) {
+                        this.spriteList[i].pop.onDispose();
+                        this.spriteList[i].removeFromStage();
+                        this.spriteList.splice(i, 1);
                         break;
                     }
                 }
@@ -63,7 +81,7 @@ namespace h {
          */
         public hideAll() {
             this.removeChildren();
-            this.popupList.length = 0;
+            this.spriteList.length = 0;
         }
 
         /**
@@ -81,14 +99,6 @@ namespace h {
          */
         public alert(options: { title?: string; content?: string; confirm?: Function; cancel?: Function }, skinName?: string) {
             this.show(new Alert(), options, skinName);
-        }
-
-        private createBackground(alpha: number) {
-            let shp = new egret.Shape();
-            shp.graphics.beginFill(0x000000, alpha);
-            shp.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
-            shp.graphics.endFill();
-            return shp;
         }
     }
     export const pop = new PopupManager();

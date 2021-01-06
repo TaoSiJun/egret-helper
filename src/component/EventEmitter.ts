@@ -16,12 +16,12 @@ namespace h {
          * @param once
          */
         public on(name: Event, listener: Function, context: any, once: boolean = false) {
-            let handler = this.eventsMap.get(name);
-            if (handler) {
-                let has = handler.some((value) => value.context === context && value.listener === listener);
+            let handlers = this.eventsMap.get(name);
+            if (handlers) {
+                let has = handlers.some((value) => value.context === context && value.listener === listener);
                 if (!has) {
-                    handler.push({ listener, context, once });
-                    this.eventsMap.set(name, handler);
+                    handlers.push({ listener, context, once });
+                    this.eventsMap.set(name, handlers);
                 } else {
                     console.warn("EventEmitter already on", name);
                 }
@@ -39,12 +39,12 @@ namespace h {
         public off(target: Event | Function | object, listener?: Function, context?: any) {
             switch (typeof target) {
                 case "string":
-                    let handler = this.eventsMap.get(target);
-                    if (handler) {
+                    let handlers = this.eventsMap.get(target);
+                    if (handlers) {
                         if (listener && context) {
-                            this.removeHandler2(handler, listener, context);
+                            this.removeHandler2(handlers, listener, context);
                         } else {
-                            this.removeHandler(handler, context);
+                            this.removeHandler(handlers, context);
                         }
                     }
                     break;
@@ -73,9 +73,9 @@ namespace h {
          * @param args
          */
         public emit(name: Event, ...args: any[]) {
-            let handler = this.eventsMap.get(name);
-            if (handler) {
-                handler.map((value) => {
+            let handlers = this.eventsMap.get(name);
+            if (handlers) {
+                handlers.map((value) => {
                     value.listener.call(value.context, ...args);
                     if (value.once) {
                         this.off(name, value.context, value.listener);
@@ -85,18 +85,28 @@ namespace h {
         }
 
         /**
+         * Check the handler had register
+         * @param name 
+         * @param listener 
+         * @param context 
+         */
+        public has(name: Event, listener: Function, context: any) {
+            return (this.eventsMap.get(name) || []).some((value) => value.context === context && value.listener === listener);
+        }
+
+        /**
          * Clear all handlers
          */
         public clear() {
             this.eventsMap.clear();
         }
 
-        private removeHandler(handler: Handler[], target: any) {
-            for (let i = handler.length - 1; i >= 0; --i) if (handler[i].context === target || handler[i].listener === target) handler.splice(i, 1);
+        private removeHandler(handlers: Handler[], target: any) {
+            for (let i = handlers.length - 1; i >= 0; --i) if (handlers[i].context === target || handlers[i].listener === target) handlers.splice(i, 1);
         }
 
-        private removeHandler2(handler: Handler[], listener: any, context: any) {
-            for (let i = handler.length - 1; i >= 0; --i) if (handler[i].context === context && handler[i].listener === listener) handler.splice(i, 1);
+        private removeHandler2(handlers: Handler[], listener: any, context: any) {
+            for (let i = handlers.length - 1; i >= 0; --i) if (handlers[i].context === context && handlers[i].listener === listener) handlers.splice(i, 1);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace h {
          * @param thisObj
          */
         public callNextFrame(callback: Function, thisObj: any) {
-            if (this._stage) {
-                this._stage.once(
+            if (this.stage) {
+                this.stage.once(
                     egret.Event.ENTER_FRAME,
                     () => {
                         callback.call(thisObj);
@@ -51,7 +51,7 @@ namespace h {
          */
         public loadScene(value: Scene, data?: any) {
             if (!value) {
-                throw new Error("Component Type Error");
+                throw new Error("Scene Type Error");
             }
             let old = this._scene;
             if (old && old.allowDispose) {
@@ -75,7 +75,7 @@ namespace h {
          */
         public removeScene(value: Scene) {
             if (!value) {
-                throw new Error("Component Type Error");
+                throw new Error("Scene Type Error");
             }
             this.dispose(value);
             if (!value.allowDispose) {
