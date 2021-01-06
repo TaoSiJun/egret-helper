@@ -61,7 +61,7 @@ namespace h {
 
         /**
          * 关闭一个弹窗
-         * @param pop 继承BasePopup的实例
+         * @param pop
          */
         public hide(pop: Popup) {
             if (pop) {
@@ -80,7 +80,10 @@ namespace h {
          * 关闭所有弹窗
          */
         public hideAll() {
-            this.removeChildren();
+            for (let i = this.spriteList.length - 1; i >= 0; --i) {
+                this.spriteList[i].pop.onDispose();
+                this.spriteList[i].removeFromStage();
+            }
             this.spriteList.length = 0;
         }
 

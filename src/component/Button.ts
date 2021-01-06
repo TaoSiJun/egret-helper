@@ -1,4 +1,9 @@
 namespace h {
+    /**
+     * 按钮
+     * @extends eui.Group
+     * @implements IComponent
+     */
     export class Button extends eui.Group implements IComponent {
         /**
          * 点击音效

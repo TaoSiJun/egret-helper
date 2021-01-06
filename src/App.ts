@@ -42,7 +42,6 @@ namespace h {
         private dispose(value: Scene) {
             value.removeFromStage();
             value.onDispose();
-            value.$dispose();
         }
 
         /**
@@ -59,10 +58,8 @@ namespace h {
                 this._scene = null;
             }
             this._scene = value;
-            this._scene.width = this.main.width;
-            this._scene.height = this.main.height;
             if (data) {
-                value.data = data;
+                this._scene.data = data;
             }
             this.main.addChild(value);
             if (!value.allowDispose) {

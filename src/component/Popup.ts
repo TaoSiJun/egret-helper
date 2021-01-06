@@ -1,4 +1,9 @@
 namespace h {
+    /**
+     * 弹窗基类
+     * @abstract
+     * @extends Component
+     */
     export abstract class Popup extends Component implements IComponent {
         /**
          * 关闭按钮
@@ -14,14 +19,9 @@ namespace h {
          * @default 0.35
          */
         public opacity: number = 0.35;
-        /**
-         * 弹窗数据
-         */
-        public data: any;
 
         protected createChildren() {
             super.createChildren();
-            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
             if (this.closeButton) {
                 this.closeButton.tap = () => {
                     pop.hide(this);
@@ -29,14 +29,8 @@ namespace h {
             }
         }
 
-        public $onRemovedFromStage() {
-            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
-            pop.hide(this);
-        }
-
         public onDispose() {
             super.onDispose();
-            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.$onRemovedFromStage, this);
             if (this.closeButton) {
                 this.closeButton.onDispose();
             }
@@ -71,7 +65,7 @@ namespace h {
                     if (this.data.confirm) {
                         this.data.confirm();
                     }
-                    this.removeFromStage();
+                    pop.hide(this);
                 };
             }
             if (this.cancelButton) {
@@ -79,7 +73,7 @@ namespace h {
                     if (this.data.cancel) {
                         this.data.cancel();
                     }
-                    this.removeFromStage();
+                    pop.hide(this);
                 };
             }
             if (this.titleLabel) {
@@ -126,7 +120,7 @@ namespace h {
             if (this.data && this.data.delay) {
                 delay = this.data.delay;
             }
-            egret.setTimeout(this.removeFromStage, this, delay);
+            egret.setTimeout(() => pop.hide(this), this, delay);
         }
     }
 
