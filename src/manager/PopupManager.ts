@@ -4,21 +4,19 @@ namespace h {
      */
     class PopupSprite extends egret.Sprite {
         private _pop: Popup;
-
         constructor(pop: Popup) {
             super();
             this._pop = pop;
-            this._pop.width = app.main.width;
-            this._pop.height = app.main.height;
-            if (this._pop.showBackground) {
+            this.pop.width = app.main.width;
+            this.pop.height = app.main.height;
+            this.addChild(this.pop);
+            if (this.pop.showBackground) {
                 this.touchEnabled = true;
-                this.graphics.beginFill(0x000000, this._pop.opacity);
+                this.graphics.beginFill(0x000000, this.pop.opacity);
                 this.graphics.drawRect(0, 0, app.main.width, app.main.height);
                 this.graphics.endFill();
             }
-            this.addChild(this._pop);
         }
-
         public get pop() {
             return this._pop;
         }
@@ -44,7 +42,7 @@ namespace h {
          * @param data 弹窗数据
          * @param skinName 弹窗皮肤
          */
-        public show(pop: Popup, data?: { [key: string]: any }, skinName?: string) {
+        public show(pop: Popup, data?: any, skinName?: string) {
             if (!this.parent) {
                 app.stage.addChild(this);
             }
@@ -54,9 +52,11 @@ namespace h {
             if (skinName) {
                 pop.skinName = skinName;
             }
-            let spr = new PopupSprite(pop);
-            this.addChild(spr);
-            this.spriteList.push(spr);
+            if (this.spriteList.every((value) => value.pop !== pop)) {
+                let spr = new PopupSprite(pop);
+                this.addChild(spr);
+                this.spriteList.push(spr);
+            }
         }
 
         /**
