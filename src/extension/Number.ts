@@ -10,6 +10,12 @@ interface Number {
      * @param symbols ["", "K", "M", "G", "T", "P", "E"]
      */
     toAbbreviate(digit?: number, symbols?: string[]): string;
+    /**
+     * Pad the number with string from start
+     * @param padLength The length of the result string
+     * @param padString '0'
+     */
+    pad(padLength: number, padString?: string): string;
 }
 Number.prototype.toThousands = function () {
     var num = (this || 0).toString();
@@ -36,4 +42,11 @@ Number.prototype.toAbbreviate = function (digit, symbols) {
     var scaled = number / scale;
     var result = (!sign ? "-" : "") + scaled.toFixed(digit) + suffix;
     return result;
+};
+Number.prototype.pad = function (padLength, padString) {
+    var str = padString == void 0 ? "0" : padString;
+    var num = this.toString();
+    var len = num.length - 1;
+    while (++len < padLength) num = str + num;
+    return num;
 };

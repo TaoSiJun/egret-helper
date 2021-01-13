@@ -17,4 +17,11 @@ namespace h {
         mat[18] = alpha;
         display.filters = [new egret.ColorMatrixFilter(mat)];
     }
+    /**
+     * 判断是否undefined
+     * @param obj
+     */
+    export function isUndefined(obj: any) {
+        return obj === void 0;
+    }
 }
