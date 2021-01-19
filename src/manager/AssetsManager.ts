@@ -1,4 +1,8 @@
 namespace h {
+    /**
+     * egret相关资源管理
+     * @private
+     */
     class AssetsManager {
         private movieClipFactory: { [name: string]: egret.MovieClipDataFactory } = {};
         private dbFactory: { [srcName: string]: dragonBones.EgretFactory } = {};
@@ -39,7 +43,7 @@ namespace h {
         }
 
         private createFactory(name: string): egret.MovieClipDataFactory {
-            if (this.movieClipFactory[name] === undefined) {
+            if (!this.movieClipFactory[name]) {
                 let texture = RES.getRes(name + "_png");
                 let data = RES.getRes(name + "_json");
                 let factory = new egret.MovieClipDataFactory(data, texture);

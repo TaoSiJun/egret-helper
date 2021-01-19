@@ -1,10 +1,9 @@
 namespace h {
     /**
      * 弹窗基类
-     * @abstract
      * @extends Component
      */
-    export abstract class Popup extends Component implements IComponent {
+    export class Popup extends Component implements IComponent {
         /**
          * 关闭按钮
          */

@@ -27,9 +27,8 @@ namespace h {
 
         public onDispose() {
             super.onDispose();
-            this.data = null;
             for (let i of this.$children) {
-                if (i instanceof Button) {
+                if (i instanceof Button || i instanceof Component) {
                     i.onDispose();
                 }
             }

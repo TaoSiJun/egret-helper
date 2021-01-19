@@ -12,13 +12,7 @@ namespace h {
          */
         public callNextFrame(callback: Function, thisObj: any) {
             if (this.stage) {
-                this.stage.once(
-                    egret.Event.ENTER_FRAME,
-                    () => {
-                        callback.call(thisObj);
-                    },
-                    this
-                );
+                this.stage.once(egret.Event.ENTER_FRAME, () => callback.call(thisObj), this);
             }
         }
 

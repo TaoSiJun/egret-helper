@@ -3,6 +3,7 @@ namespace h {
         onDispose(): void;
     }
     /**
+     * 基础组件
      * @extends eui.Component
      * @method onAddedToStage
      * @method createChildren
@@ -37,6 +38,7 @@ namespace h {
          * 请调用super.onDispose()完成父类释放
          */
         public onDispose() {
+            this.data = null;
             this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddedToStage, this);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemovedFromStage, this);
             this.removeEventListener(egret.Event.RESIZE, this.onResize, this);
