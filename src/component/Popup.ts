@@ -21,18 +21,31 @@ namespace h {
 
         protected createChildren() {
             super.createChildren();
+            this.setCloseButton();
+        }
+
+        public onAddedToStage() {
+            this.setCloseButton();
+        }
+
+        protected setCloseButton() {
             if (this.closeButton) {
                 this.closeButton.tap = () => {
-                    pop.hide(this);
+                    this.hide();
                 };
             }
         }
 
+        /**
+         * 关掉这个弹窗
+         */
+        public hide() {
+            pop.hide(this);
+        }
+
         public onDispose() {
             super.onDispose();
-            if (this.closeButton) {
-                this.closeButton.onDispose();
-            }
+            this.closeButton && this.closeButton.onDispose();
         }
     }
 
@@ -59,12 +72,18 @@ namespace h {
 
         protected createChildren() {
             super.createChildren();
+            if (this.titleLabel) {
+                this.titleLabel.text = this.data?.title;
+            }
+            if (this.contentLabel) {
+                this.contentLabel.text = this.data?.content;
+            }
             if (this.confirmButton) {
                 this.confirmButton.tap = () => {
                     if (this.data.confirm) {
                         this.data.confirm();
                     }
-                    pop.hide(this);
+                    this.hide();
                 };
             }
             if (this.cancelButton) {
@@ -72,25 +91,15 @@ namespace h {
                     if (this.data.cancel) {
                         this.data.cancel();
                     }
-                    pop.hide(this);
+                    this.hide();
                 };
-            }
-            if (this.titleLabel) {
-                this.titleLabel.text = this.data?.title;
-            }
-            if (this.contentLabel) {
-                this.contentLabel.text = this.data?.content;
             }
         }
 
         public onDispose() {
             super.onDispose();
-            if (this.confirmButton) {
-                this.confirmButton.onDispose();
-            }
-            if (this.cancelButton) {
-                this.cancelButton.onDispose();
-            }
+            this.confirmButton && this.confirmButton.onDispose();
+            this.cancelButton && this.cancelButton.onDispose();
         }
     }
 
@@ -102,6 +111,7 @@ namespace h {
          * 提示文本Label
          */
         protected messageLabel: eui.Label;
+        protected delayId: number;
 
         constructor() {
             super();
@@ -110,16 +120,14 @@ namespace h {
             this.touchChildren = false;
         }
 
-        protected createChildren() {
-            super.createChildren();
-            if (this.messageLabel && this.data && this.data.message) {
-                this.messageLabel.textFlow = new egret.HtmlTextParser().parser(this.data.message);
-            }
-            let delay = 3000;
-            if (this.data && this.data.delay) {
-                delay = this.data.delay;
-            }
-            egret.setTimeout(() => pop.hide(this), this, delay);
+        public onAddedToStage() {
+            egret.clearTimeout(this.delayId);
+            this.delayId = egret.setTimeout(this.remove, this, this.data.delay || 3000);
+            this.messageLabel.textFlow = new egret.HtmlTextParser().parser(this.data.message || "");
+        }
+
+        public remove() {
+            pop.remove(this);
         }
     }
 

@@ -6,13 +6,13 @@ namespace h {
      */
     export class Button extends eui.Group implements IComponent {
         /**
-         * 点击音效
+         * 所有按钮默认音效
          * @default 'click'
          */
         public static Sound: string = "click";
         /**
          * 按钮能否点击
-         * @default false
+         * @default true
          */
         public enable: boolean = true;
         /**
@@ -29,9 +29,21 @@ namespace h {
          * 点击音效 不设置将使用默认
          */
         public sound: string;
+        /**
+         * @event egret.Event.TouchEvent.TOUCH_TAP
+         */
         public tap: (e: egret.TouchEvent) => void;
+        /**
+         * @event egret.Event.TouchEvent.TOUCH_BEGIN
+         */
         public begin: (e: egret.TouchEvent) => void;
+        /**
+         * @event egret.Event.TouchEvent.TOUCH_END
+         */
         public end: (e: egret.TouchEvent) => void;
+        /**
+         * @event egret.Event.TouchEvent.TOUCH_RELEASE_OUTSIDE
+         */
         public out: (e: egret.TouchEvent) => void;
 
         protected createChildren() {

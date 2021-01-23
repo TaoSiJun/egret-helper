@@ -25,10 +25,6 @@ namespace h {
             return this._stage;
         }
 
-        public get main() {
-            return this._main;
-        }
-
         public get currentScene() {
             return this._scene;
         }
@@ -55,7 +51,7 @@ namespace h {
             if (data) {
                 this._scene.data = data;
             }
-            this.main.addChild(value);
+            this._main.addChild(value);
             if (!value.allowDispose) {
                 this._sceneList.unshift(value);
             }

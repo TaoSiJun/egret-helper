@@ -2,23 +2,30 @@ namespace h {
     /**
      * @private
      */
-    class PopupSprite extends egret.Sprite {
+    class PopupWrapper extends eui.Group {
+        private _shp: egret.Shape;
         private _pop: Popup;
         constructor(pop: Popup) {
             super();
-            this._pop = pop;
-            this.pop.width = app.main.width;
-            this.pop.height = app.main.height;
-            this.addChild(this.pop);
-            if (this.pop.showBackground) {
-                this.touchEnabled = true;
-                this.graphics.beginFill(0x000000, this.pop.opacity);
-                this.graphics.drawRect(0, 0, app.main.width, app.main.height);
-                this.graphics.endFill();
+            this.touchEnabled = false;
+            pop.width = app.stage.stageWidth;
+            pop.height = app.stage.stageHeight;
+            if (pop.showBackground) {
+                this._shp = new egret.Shape();
+                this._shp.touchEnabled = true;
+                this._shp.graphics.beginFill(0x000000, pop.opacity);
+                this._shp.graphics.drawRect(0, 0, app.stage.stageWidth, app.stage.stageHeight);
+                this._shp.graphics.endFill();
+                this.addChild(this._shp);
             }
+            this._pop = pop;
+            this.addChild(pop);
         }
         public get pop() {
             return this._pop;
+        }
+        public get shp() {
+            return this._shp;
         }
     }
     /**
@@ -26,7 +33,8 @@ namespace h {
      * @extends eui.UILayer
      */
     class PopupManager extends eui.UILayer {
-        private spriteList: PopupSprite[] = [];
+        private _wrapperList: PopupWrapper[] = [];
+        private _remind: Remind;
 
         public constructor() {
             super();
@@ -35,7 +43,6 @@ namespace h {
             egret.registerClass(Remind, "h.Remind");
             egret.registerClass(Wait, "h.Wait");
         }
-
         /**
          * 显示一个弹窗
          * @param pop 继承BasePopup的实例
@@ -52,50 +59,64 @@ namespace h {
             if (skinName) {
                 pop.skinName = skinName;
             }
-            if (this.spriteList.every((value) => value.pop !== pop)) {
-                let spr = new PopupSprite(pop);
-                this.addChild(spr);
-                this.spriteList.push(spr);
+            let index = this._wrapperList.findIndex((value) => value.pop === pop);
+            let wrapper = index > -1 ? this._wrapperList[index] : new PopupWrapper(pop);
+            if (!wrapper.parent) {
+                this.addChild(wrapper);
+                this._wrapperList.push(wrapper);
             }
         }
-
         /**
          * 关闭一个弹窗
          * @param pop
          */
         public hide(pop: Popup) {
-            if (pop) {
-                for (let i = this.spriteList.length - 1; i >= 0; --i) {
-                    if (this.spriteList[i].pop === pop) {
-                        this.spriteList[i].pop.onDispose();
-                        this.spriteList[i].removeFromStage();
-                        this.spriteList.splice(i, 1);
-                        break;
-                    }
+            if (!pop) {
+                throw "Popup Type Error";
+            }
+            for (let i = this._wrapperList.length - 1; i >= 0; --i) {
+                if (this._wrapperList[i].pop === pop) {
+                    this._wrapperList[i].removeFromStage();
+                    this._wrapperList[i].pop.onDispose();
+                    this._wrapperList.splice(i, 1);
+                    break;
                 }
             }
         }
-
         /**
          * 关闭所有弹窗
          */
         public hideAll() {
-            for (let i = this.spriteList.length - 1; i >= 0; --i) {
-                this.spriteList[i].pop.onDispose();
-                this.spriteList[i].removeFromStage();
+            for (let wrapper of this._wrapperList) {
+                wrapper.removeFromStage();
+                wrapper.pop.onDispose();
             }
-            this.spriteList.length = 0;
+            this._wrapperList = [];
         }
-
+        /**
+         * 从舞台上删除一个弹窗
+         */
+        public remove(pop: Popup) {
+            if (!pop) {
+                throw "Popup Type Error";
+            }
+            for (let i = this._wrapperList.length - 1; i >= 0; --i) {
+                if (this._wrapperList[i].pop === pop) {
+                    this._wrapperList[i].removeFromStage();
+                    // this._wrapperList[i].pop.onDispose();
+                    // this._wrapperList.splice(i, 1);
+                    break;
+                }
+            }
+        }
         /**
          * 显示一个提示弹窗
          * @param message
-         * @param delay 多久毫秒后删除
+         * @param delay 移除延迟(ms)
          */
         public remind(message: string, delay: number = 3000, skinName?: string) {
-            this.show(new Remind(), { message, delay }, skinName);
+            this.show((this._remind = this._remind || new Remind()), { message, delay }, skinName);
         }
-
         /**
          * 显示一个警告弹窗
          * @param options
