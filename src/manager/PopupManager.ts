@@ -61,10 +61,12 @@ namespace h {
             }
             let index = this._wrapperList.findIndex((value) => value.pop === pop);
             let wrapper = index > -1 ? this._wrapperList[index] : new PopupWrapper(pop);
-            if (!wrapper.parent) {
-                this.addChild(wrapper);
+            if (index > -1) {
+                wrapper.removeFromStage();
+            } else {
                 this._wrapperList.push(wrapper);
             }
+            this.addChild(wrapper);
         }
         /**
          * 关闭一个弹窗
