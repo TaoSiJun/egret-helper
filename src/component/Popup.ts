@@ -120,7 +120,7 @@ namespace h {
             this.touchChildren = false;
         }
 
-        public onAddedToStage() {
+        public setMessage() {
             egret.clearTimeout(this.delayId);
             this.delayId = egret.setTimeout(this.remove, this, this.data.delay || 3000);
             this.messageLabel.textFlow = new egret.HtmlTextParser().parser(this.data.message || "");

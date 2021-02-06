@@ -11,6 +11,11 @@ namespace h {
          */
         public static Sound: string = "click";
         /**
+         * 所有按钮默认(TOUCH_TAP)间隔
+         * @default 200
+         */
+        public static Space: number = 200;
+        /**
          * 按钮能否点击
          * @default true
          */
@@ -26,9 +31,13 @@ namespace h {
          */
         public scale: boolean = true;
         /**
-         * 点击音效 不设置将使用默认
+         * 这个按钮的点击音效
          */
         public sound: string;
+        /**
+         * 这个按钮的点击(TOUCH_TAP)间隔
+         */
+        public space: number;
         /**
          * @event egret.Event.TouchEvent.TOUCH_TAP
          */
@@ -46,6 +55,12 @@ namespace h {
          */
         public out: (e: egret.TouchEvent) => void;
 
+        private _time: number;
+
+        private get tapSpace() {
+            return this.space || Button.Space;
+        }
+
         protected createChildren() {
             super.createChildren();
             this.x += this.width / 2;
@@ -57,8 +72,9 @@ namespace h {
         }
 
         private onTouchTap(e: egret.TouchEvent) {
-            if (this.enable) {
-                if (this.tap) {
+            if (this.enable && this.tap) {
+                if (this._time == null || egret.getTimer() - this._time > this.tapSpace) {
+                    this._time = egret.getTimer();
                     this.tap(e);
                 }
             }

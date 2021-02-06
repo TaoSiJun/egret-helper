@@ -3,15 +3,6 @@ namespace h {
         private _soundChannel: Record<string, egret.SoundChannel> = {};
         private _sound: Record<string, egret.Sound> = {};
         private _quiet: boolean = false;
-        private _path: string = "resource/sounds";
-
-        /**
-         * The sound resource path
-         * @default "resource/sounds"
-         */
-        public set path(value: string) {
-            this._path = value;
-        }
 
         /**
          * @default false
@@ -43,7 +34,7 @@ namespace h {
                 if (loops < 1) this.stopSound(name);
                 play(this._sound[name]);
             } else {
-                RES.getResByUrl(this._path + "/" + name, play, this, RES.ResourceItem.TYPE_SOUND);
+                RES.getResAsync(name + "_mp3", play, this);
             }
         }
 
@@ -56,7 +47,7 @@ namespace h {
                 this._soundChannel[name].stop();
                 delete this._soundChannel[name];
                 if (destory) {
-                    RES.destroyRes(this._path + "/" + name);
+                    RES.destroyRes(name + "_mp3");
                 }
             }
         }

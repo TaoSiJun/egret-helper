@@ -35,6 +35,16 @@ namespace h {
          */
         public onResize() {}
         /**
+         * 释放
+         */
+        public disposeChildren() {
+            for (let i of this.$children) {
+                if (i instanceof Button || i instanceof Component) {
+                    i.onDispose();
+                }
+            }
+        }
+        /**
          * 请调用super.onDispose()完成父类释放
          */
         public onDispose() {
@@ -42,6 +52,7 @@ namespace h {
             this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddedToStage, this);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemovedFromStage, this);
             this.removeEventListener(egret.Event.RESIZE, this.onResize, this);
+            this.disposeChildren();
         }
     }
 }

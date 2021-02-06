@@ -118,6 +118,7 @@ namespace h {
          */
         public remind(message: string, delay: number = 3000, skinName?: string) {
             this.show((this._remind = this._remind || new Remind()), { message, delay }, skinName);
+            this._remind.setMessage();
         }
         /**
          * 显示一个警告弹窗
