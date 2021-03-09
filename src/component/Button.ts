@@ -12,9 +12,9 @@ namespace h {
         public static Sound: string = "click";
         /**
          * 所有按钮默认(TOUCH_TAP)间隔
-         * @default 200
+         * @default 500
          */
-        public static Space: number = 200;
+        public static Space: number = 500;
         /**
          * 按钮能否点击
          * @default true
