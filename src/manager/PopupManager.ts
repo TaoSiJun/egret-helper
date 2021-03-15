@@ -24,13 +24,9 @@ namespace h {
         public get pop() {
             return this._pop;
         }
-        public get shp() {
-            return this._shp;
-        }
     }
     /**
      * @private
-     * @extends eui.UILayer
      */
     class PopupManager extends eui.UILayer {
         private _wrapperList: PopupWrapper[] = [];
