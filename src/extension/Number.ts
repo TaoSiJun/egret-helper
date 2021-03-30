@@ -30,18 +30,22 @@ Number.prototype.toThousands = function () {
     return result;
 };
 Number.prototype.toAbbreviate = function (digit, symbols) {
-    if (digit == void 0) digit = 0;
-    if (symbols == void 0) symbols = ["", "K", "M", "G", "T", "P", "E"];
     var number = Number(this);
-    var sign = Math.sign(number) >= 0;
     var tier = (Math.log10(number) / 3) | 0;
-    if (tier == 0) return number.toString();
+    if (tier === 0) {
+        return number.toString();
+    }
+    if (digit === void 0) digit = 0;
+    if (symbols === void 0) symbols = ["", "K", "M", "G", "T", "P", "E"];
     var suffix = symbols[tier];
-    if (!suffix) throw new RangeError();
+    if (!suffix) {
+        var tier2 = tier - symbols.length;
+        suffix = String.fromCharCode(tier2 / 26 + 97) + String.fromCharCode((tier2 % 26) + 97);
+    }
     var scale = Math.pow(10, tier * 3);
     var scaled = number / scale;
-    var result = (!sign ? "-" : "") + scaled.toFixed(digit) + suffix;
-    return result;
+    var result = scaled.toFixed(digit) + suffix;
+    return (Math.sign(number) >= 0 ? "" : "-") + result;
 };
 Number.prototype.pad = function (padLength, padString) {
     var str = padString == void 0 ? "0" : padString;
