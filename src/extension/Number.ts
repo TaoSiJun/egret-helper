@@ -18,7 +18,7 @@ interface Number {
     pad(padLength: number, padString?: string): string;
 }
 Number.prototype.toThousands = function () {
-    var num = (this || 0).toString();
+    var num = Number(this).toString();
     var result = "";
     while (num.length > 3) {
         result = "," + num.slice(-3) + result;
