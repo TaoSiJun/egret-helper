@@ -15,9 +15,9 @@ namespace h {
         public showBackground: boolean = true;
         /**
          * 遮罩透明度
-         * @default 0.35
+         * @default 0.5
          */
-        public opacity: number = 0.35;
+        public opacity: number = 0.5;
 
         protected createChildren() {
             super.createChildren();
@@ -58,9 +58,17 @@ namespace h {
          */
         protected confirmButton: Button;
         /**
+         * 确认按钮文本
+         */
+        protected confirmLabel: eui.Label;
+        /**
          * 取消按钮
          */
         protected cancelButton: Button;
+        /**
+         * 取消按钮文本
+         */
+        protected cancelLabel: eui.Label;
         /**
          * 标题文本
          */
@@ -69,6 +77,8 @@ namespace h {
          * 内容文本
          */
         protected contentLabel: eui.Label;
+
+        public data: AlertOptions;
 
         protected createChildren() {
             super.createChildren();
@@ -93,6 +103,12 @@ namespace h {
                     }
                     this.hide();
                 };
+            }
+            if (this.confirmLabel) {
+                this.confirmLabel.text = this.data?.confirmText;
+            }
+            if (this.cancelLabel) {
+                this.cancelLabel.text = this.data?.cancelText;
             }
         }
 

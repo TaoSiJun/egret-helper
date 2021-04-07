@@ -120,9 +120,15 @@ namespace h {
          * 显示一个警告弹窗
          * @param options
          */
-        public alert(options: { title?: string; content?: string; confirm?: Function; cancel?: Function }, skinName?: string) {
+        public alert(options: AlertOptions, skinName?: string) {
             this.show(new Alert(), options, skinName);
         }
     }
     export const pop = new PopupManager();
+
+    /**
+     * @param confirmText
+     * @param cancelText
+     */
+    export type AlertOptions = { title?: string; content?: string; confirm?: Function; cancel?: Function; confirmText?: string; cancelText?: string };
 }

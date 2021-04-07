@@ -63,10 +63,10 @@ namespace h {
 
         protected createChildren() {
             super.createChildren();
-            this.x += this.width / 2;
-            this.y += this.height / 2;
-            this.anchorOffsetX = this.width / 2;
-            this.anchorOffsetY = this.height / 2;
+            this.x += this.$getWidth() / 2;
+            this.y += this.$getHeight() / 2;
+            this.anchorOffsetX = this.$getWidth() / 2;
+            this.anchorOffsetY = this.$getHeight() / 2;
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
             this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTap, this);
         }
