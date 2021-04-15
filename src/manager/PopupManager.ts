@@ -19,6 +19,7 @@ namespace h {
                 this.addChild(this._shp);
             }
             this._pop = pop;
+            this._pop.shape = this._shp;
             this.addChild(pop);
         }
         public get pop() {

@@ -9,6 +9,10 @@ namespace h {
          */
         protected closeButton: Button;
         /**
+         * 背景
+         */
+        public shape: egret.Shape;
+        /**
          * 是否显示遮罩
          * @default true
          */
