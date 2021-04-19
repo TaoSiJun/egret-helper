@@ -74,11 +74,12 @@ namespace h {
         public emit(name: Event, ...args: any[]) {
             let handlers = this.map.get(name);
             if (handlers) {
-                for (let i = handlers.length - 1; i >= 0; --i) {
+                for (let i = 0; i < handlers.length; ++i) {
                     let handler = handlers[i];
                     handler.listener.call(handler.context, ...args);
                     if (handler.once) {
                         handlers.splice(i, 1);
+                        --i;
                     }
                 }
             }
