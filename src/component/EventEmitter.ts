@@ -19,7 +19,7 @@ namespace h {
             if (handlers) {
                 let has = this.has(name, listener, context);
                 if (!has) {
-                    handlers.push({ listener, context, once });
+                    handlers.unshift({ listener, context, once });
                     this.map.set(name, handlers);
                 } else {
                     console.warn("EventEmitter already on", name);
@@ -74,12 +74,11 @@ namespace h {
         public emit(name: Event, ...args: any[]) {
             let handlers = this.map.get(name);
             if (handlers) {
-                for (let i = 0; i < handlers.length; ++i) {
+                for (let i = handlers.length - 1; i > -1; --i) {
                     let handler = handlers[i];
                     handler.listener.call(handler.context, ...args);
                     if (handler.once) {
                         handlers.splice(i, 1);
-                        --i;
                     }
                 }
             }
