@@ -109,6 +109,12 @@ namespace h {
         public stopMusic() {
             this.stopSound(this._currentMusicName);
         }
+
+        public resumeMusic() {
+            if (this._currentMusicName) {
+                this.playMusic(this._currentMusicName, this._currentMusicVolume);
+            }
+        }
     }
     export const sound = new SoundManager();
 }
