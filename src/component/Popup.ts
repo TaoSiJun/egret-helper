@@ -22,10 +22,17 @@ namespace h {
          * @default 0.5
          */
         public opacity: number = 0.5;
+        /**
+         * 触摸遮罩关闭
+         */
+        public tapShape: boolean = false;
 
         protected createChildren() {
             super.createChildren();
             this.setCloseButton();
+            if (this.tapShape) {
+                this.shape && this.shape.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShape, this);
+            }
         }
 
         public onAddedToStage() {
@@ -40,6 +47,10 @@ namespace h {
             }
         }
 
+        protected onTapShape() {
+            this.hide();
+        }
+
         /**
          * 关掉这个弹窗
          */
@@ -50,6 +61,7 @@ namespace h {
         public onDispose() {
             super.onDispose();
             this.closeButton && this.closeButton.onDispose();
+            this.shape && this.shape.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShape, this);
         }
     }
 
