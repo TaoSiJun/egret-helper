@@ -55,6 +55,9 @@ namespace h {
         private load(name: string, volume: number = 1, loops: number = 1) {
             if (!name || !volume) return;
             let play = (sound: egret.Sound) => {
+                if (sound == null) {
+                    throw new Error("Play sound failed.");
+                }
                 this._sounds[name] = sound;
                 this._soundsChannel[name] = sound.play(0, loops);
                 this._soundsChannel[name].volume = volume;

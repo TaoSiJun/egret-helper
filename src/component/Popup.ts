@@ -60,7 +60,6 @@ namespace h {
 
         public onDispose() {
             super.onDispose();
-            this.closeButton && this.closeButton.onDispose();
             this.shape && this.shape.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShape, this);
         }
     }

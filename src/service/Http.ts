@@ -19,7 +19,7 @@ namespace h {
         public responseType: ResponseType = "json";
 
         private send(url: string, data: any, method: HttpMethod) {
-            return new Promise((resolve, reject) => {
+            return new Promise<string>((resolve, reject) => {
                 let request = new egret.HttpRequest();
                 request.timeout = this.timeout;
                 request.responseType = this.responseType;

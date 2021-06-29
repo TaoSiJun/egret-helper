@@ -24,10 +24,5 @@ namespace h {
             this.x = this.stage.stageWidth / 2 - this.width / 2;
             this.y = this.stage.stageHeight / 2 - this.height / 2;
         }
-
-        public onDispose() {
-            super.onDispose();
-            this.disposeChildren();
-        }
     }
 }

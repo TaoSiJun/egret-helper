@@ -4,7 +4,7 @@
     "description": "some egret engine helper",
     "scripts": {
         "test": "",
-        "build": "tsc & uglifyjs ./out/egret-helper.js -o ./out/egret-helper.min.js -m & echo done"
+        "build": "tsc & uglifyjs ./out/egret-helper.js -o ./out/egret-helper.min.js -m"
     },
     "author": "taosijun",
     "license": "ISC",

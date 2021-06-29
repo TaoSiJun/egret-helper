@@ -24,15 +24,14 @@ namespace h {
                 while (split-- > 0) {
                     let json = RES.getRes(srcName + "_tex_" + split + "_json");
                     let png = RES.getRes(srcName + "_tex_" + split + "_png");
-                    factory.parseDragonBonesData(ske);
                     factory.parseTextureAtlasData(json, png);
                 }
             } else {
                 let json = RES.getRes(srcName + "_tex_json");
                 let png = RES.getRes(srcName + "_tex_png");
-                factory.parseDragonBonesData(ske);
                 factory.parseTextureAtlasData(json, png);
             }
+            factory.parseDragonBonesData(ske);
             return factory;
         }
 
