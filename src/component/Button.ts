@@ -24,7 +24,7 @@ namespace h {
          * 点击声音
          * @default false
          */
-        public quite: boolean = false;
+        public quiet: boolean = false;
         /**
          * 缩放效果
          * @default true
@@ -90,7 +90,7 @@ namespace h {
                 if (this.scale) {
                     egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100).set({ scaleX: 0.95, scaleY: 0.95 });
                 }
-                if (!this.quite) {
+                if (!this.quiet) {
                     sound.playSound(this.sound || Button.Sound);
                 }
             }
