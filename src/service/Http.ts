@@ -3,6 +3,8 @@ namespace h {
 
     type ResponseType = "json" | "text" | "arraybuffer";
 
+    type ReturnObject = { [key: string]: any };
+
     export class Http {
         /**
          * 在请求被终止前的时间（毫秒）
@@ -10,24 +12,31 @@ namespace h {
          */
         public timeout: number = 0;
         /**
-         * 默认消息头
-         */
-        public headers: any = {};
-        /**
-         * 默认消息体
-         */
-        public body: any = {};
-        /**
-         * 主机地址
-         */
-        public host: string = "";
-        /**
          * 返回数据格式
          */
         public responseType: ResponseType = "json";
+        /**
+         * @override 重写此方法获取host
+         */
+        protected get host(): string {
+            return "";
+        }
+        /**
+         * @override 重写此方法获取headers
+         */
+        protected get headers(): ReturnObject {
+            return {};
+        }
+        /**
+         * @override 重写此方法获取body
+         */
+        protected get body(): ReturnObject {
+            return {};
+        }
 
         public send(url: string, data: any, method: HttpMethod) {
             return new Promise<any>((resolve, reject) => {
+                console.log("======>new egret.HttpRequest() before");
                 let request = new egret.HttpRequest();
                 request.timeout = this.timeout;
                 request.responseType = this.responseType;
@@ -35,11 +44,13 @@ namespace h {
                     let params = this.getParams(data);
                     if (params !== "") url += "?" + params;
                 }
+                console.log("======>request open() before");
                 request.open(this.host + url, method);
-                this.headers["Content-type"] = "application/json";
+                request.setRequestHeader("Content-type", "application/json");
                 for (let key in this.headers) {
-                    request.setRequestHeader(key, this.headers[key]);
+                    request.setRequestHeader(key, this.headers[key] + "");
                 }
+                console.log("======>request send() before");
                 request.send(data);
                 request.addEventListener(egret.Event.COMPLETE, () => resolve(request.response), null);
                 request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => reject(request.response), null);
@@ -69,10 +80,7 @@ namespace h {
          */
         public async post(url: string, data: any = {}) {
             try {
-                let body = data;
-                for (let k in this.body) {
-                    body[k] = this.body[k];
-                }
+                let body = Object.assign(this.body, data);
                 let response = await this.send(url, JSON.stringify(body), "POST");
                 return this.resolve(response);
             } catch (error) {
@@ -84,9 +92,9 @@ namespace h {
          * 发送GET请求
          * @param url
          */
-        public async get(url: string) {
+        public async get(url: string, data?: any) {
             try {
-                let response = await this.send(url, null, "GET");
+                let response = await this.send(url, data, "GET");
                 return this.resolve(response);
             } catch (error) {
                 this.reject(error);
