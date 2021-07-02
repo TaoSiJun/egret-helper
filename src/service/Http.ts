@@ -36,7 +36,6 @@ namespace h {
 
         public send(url: string, data: any, method: HttpMethod) {
             return new Promise<any>((resolve, reject) => {
-                console.log("======>new egret.HttpRequest() before");
                 let request = new egret.HttpRequest();
                 request.timeout = this.timeout;
                 request.responseType = this.responseType;
@@ -44,13 +43,11 @@ namespace h {
                     let params = this.getParams(data);
                     if (params !== "") url += "?" + params;
                 }
-                console.log("======>request open() before");
                 request.open(this.host + url, method);
                 request.setRequestHeader("Content-type", "application/json");
                 for (let key in this.headers) {
                     request.setRequestHeader(key, this.headers[key] + "");
                 }
-                console.log("======>request send() before");
                 request.send(data);
                 request.addEventListener(egret.Event.COMPLETE, () => resolve(request.response), null);
                 request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => reject(request.response), null);
