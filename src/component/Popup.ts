@@ -55,7 +55,7 @@ namespace h {
          * 关掉这个弹窗
          */
         public hide() {
-            pop.hide(this);
+            app.pop.hide(this);
         }
 
         public onDispose() {
@@ -158,7 +158,7 @@ namespace h {
         }
 
         public remove() {
-            pop.remove(this);
+            this.hide();
         }
     }
 

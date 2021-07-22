@@ -1,5 +1,5 @@
 namespace h {
-    class TimerManager {
+    export class TimerManager {
         public add(delay: number, repeat: number, data: { timer: Function; timerComplete?: Function; thisObj: any }) {
             let timer = new egret.Timer(delay, repeat);
             timer.addEventListener(egret.TimerEvent.TIMER, data.timer, data.thisObj);
@@ -10,5 +10,4 @@ namespace h {
             return timer;
         }
     }
-    export const timer = new TimerManager();
 }

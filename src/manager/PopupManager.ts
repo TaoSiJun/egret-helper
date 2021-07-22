@@ -27,9 +27,14 @@ namespace h {
         }
     }
     /**
-     * @private
+     * @param confirmText
+     * @param cancelText
      */
-    class PopupManager extends eui.UILayer {
+    export type AlertOptions = { title?: string; content?: string; confirm?: Function; cancel?: Function; confirmText?: string; cancelText?: string };
+    /**
+     * 弹窗管理
+     */
+    export class PopupManager extends eui.UILayer {
         private _wrapperList: PopupWrapper[] = [];
         private _remind: Remind;
 
@@ -125,11 +130,4 @@ namespace h {
             this.show(new Alert(), options, skinName);
         }
     }
-    export const pop = new PopupManager();
-
-    /**
-     * @param confirmText
-     * @param cancelText
-     */
-    export type AlertOptions = { title?: string; content?: string; confirm?: Function; cancel?: Function; confirmText?: string; cancelText?: string };
 }

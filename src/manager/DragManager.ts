@@ -19,7 +19,7 @@ namespace h {
         options: IDragOptions;
     }
 
-    class DragManager {
+    export class DragManager {
         private dragTargetArray: IDragTarget[];
         private dragAreaArray: egret.DisplayObjectContainer[];
         private currentDragTarget: IDragTarget;
@@ -203,8 +203,4 @@ namespace h {
             this.dragAreaArray = [];
         }
     }
-    /**
-     * 拖拽
-     */
-    export const drag = new DragManager();
 }

@@ -1,5 +1,5 @@
 namespace h {
-    class SoundManager {
+    export class SoundManager {
         private _soundsChannel: Record<string, egret.SoundChannel> = {};
         private _sounds: Record<string, egret.Sound> = {};
         private _quiet: boolean = false;
@@ -119,5 +119,4 @@ namespace h {
             }
         }
     }
-    export const sound = new SoundManager();
 }

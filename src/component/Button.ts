@@ -91,7 +91,7 @@ namespace h {
                     egret.Tween.get(this).to({ scaleX: 0.95, scaleY: 0.95 }, 100).set({ scaleX: 0.95, scaleY: 0.95 });
                 }
                 if (!this.quiet) {
-                    sound.playSound(this.sound || Button.Sound);
+                    app.sound.playSound(this.sound || Button.Sound);
                 }
             }
         }

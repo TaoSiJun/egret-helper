@@ -6,7 +6,7 @@ namespace h {
      */
     export abstract class Scene extends Component implements IComponent {
         /**
-         * 是否允许组件释放 false会一直在舞台上
+         * 加载另一个新场景后是否释放
          * @default true
          */
         public allowDispose = true;
