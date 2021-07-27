@@ -18,14 +18,19 @@ interface Number {
     pad(padLength: number, padString?: string): string;
 }
 Number.prototype.toThousands = function () {
-    var num = Number(this).toString();
+    var number = Number(this).toString();
+    var integer = number.split(".")[0];
+    var decimal = number.split(".")[1];
     var result = "";
-    while (num.length > 3) {
-        result = "," + num.slice(-3) + result;
-        num = num.slice(0, num.length - 3);
+    while (integer.length > 3) {
+        result = "," + integer.slice(-3) + result;
+        integer = integer.slice(0, integer.length - 3);
     }
-    if (num) {
-        result = num + result;
+    if (integer) {
+        result = integer + result;
+    }
+    if (decimal) {
+        result = result + "." + decimal;
     }
     return result;
 };
