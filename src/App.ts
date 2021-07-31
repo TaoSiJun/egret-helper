@@ -19,23 +19,38 @@ namespace h {
         }
 
         public get sound() {
-            return this._soundManager || (this._soundManager = new SoundManager());
+            if (this._soundManager == void 0) {
+                this._soundManager = new SoundManager();
+            }
+            return this._soundManager;
         }
 
         public get timer() {
-            return this._timerManager || (this._timerManager = new TimerManager());
+            if (this._timerManager == void 0) {
+                this._timerManager = new TimerManager();
+            }
+            return this._timerManager;
         }
 
         public get assets() {
-            return this._assetsManager || (this._assetsManager = new AssetsManager());
+            if (this._assetsManager == void 0) {
+                this._assetsManager = new AssetsManager();
+            }
+            return this._assetsManager;
         }
 
         public get pop() {
-            return this._popupManager || (this._popupManager = new PopupManager());
+            if (this._popupManager == void 0) {
+                this._popupManager = new PopupManager();
+            }
+            return this._popupManager;
         }
 
         public get drag() {
-            return this._dragManager || (this._dragManager = new DragManager());
+            if (this._dragManager == void 0) {
+                this._dragManager = new DragManager();
+            }
+            return this._dragManager;
         }
 
         public callNextFrame(callback: Function, thisObj: any) {

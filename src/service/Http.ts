@@ -48,9 +48,9 @@ namespace h {
                 for (let key in this.headers) {
                     request.setRequestHeader(key, this.headers[key] + "");
                 }
-                request.send(data);
                 request.addEventListener(egret.Event.COMPLETE, () => resolve(request.response), null);
                 request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => reject(request.response), null);
+                request.send(data);
             });
         }
 
@@ -81,7 +81,7 @@ namespace h {
                 let response = await this.send(url, JSON.stringify(body), "POST");
                 return this.resolve(response);
             } catch (error) {
-                this.reject(error);
+                return this.reject(error);
             }
         }
 
@@ -94,7 +94,7 @@ namespace h {
                 let response = await this.send(url, data, "GET");
                 return this.resolve(response);
             } catch (error) {
-                this.reject(error);
+                return this.reject(error);
             }
         }
     }
