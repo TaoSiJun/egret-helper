@@ -36,20 +36,36 @@ namespace h {
 
         public send(url: string, data: any, method: HttpMethod) {
             return new Promise<any>((resolve, reject) => {
+                let onComplete = (e: egret.Event) => {
+                    resolve(e.currentTarget.response);
+                };
+                let onIOError = (e: egret.Event) => {
+                    reject(e.currentTarget.response);
+                };
                 let request = new egret.HttpRequest();
                 request.timeout = this.timeout;
                 request.responseType = this.responseType;
-                if (method === "GET") {
-                    let params = this.getParams(data);
-                    if (params !== "") url += "?" + params;
+                switch (method) {
+                    case "GET":
+                        let params = this.getParams(data);
+                        if (params !== "") {
+                            url += "?" + params;
+                        }
+                        data = null;
+                        break;
+                    case "POST":
+                        if (typeof data === "object") {
+                            data = JSON.stringify(data);
+                        }
+                        break;
                 }
                 request.open(this.host + url, method);
                 request.setRequestHeader("Content-type", "application/json");
                 for (let key in this.headers) {
                     request.setRequestHeader(key, this.headers[key] + "");
                 }
-                request.addEventListener(egret.Event.COMPLETE, () => resolve(request.response), null);
-                request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => reject(request.response), null);
+                request.addEventListener(egret.Event.COMPLETE, onComplete, null);
+                request.addEventListener(egret.IOErrorEvent.IO_ERROR, onIOError, null);
                 request.send(data);
             });
         }
@@ -77,8 +93,7 @@ namespace h {
          */
         public async post(url: string, data: any = {}) {
             try {
-                let body = Object.assign(this.body, data);
-                let response = await this.send(url, JSON.stringify(body), "POST");
+                let response = await this.send(url, Object.assign(this.body, data), "POST");
                 return this.resolve(response);
             } catch (error) {
                 return this.reject(error);
